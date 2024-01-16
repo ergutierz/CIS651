@@ -49,48 +49,70 @@ class GameViewModel : ViewModel() {
 
     private fun flipCard(index: Int) {
         viewModelScope.launch {
-            val currentState = _state.value
-            val currentCard = currentState.grid[index]
+            val currentCard = _state.value.grid[index]
+
             if (currentCard.isFlipped || currentCard.isRemoved) return@launch
 
-            // Flip the selected card
-            val newGrid = currentState.grid.toMutableList().apply {
-                this[index] = currentCard.copy(isFlipped = true)
-            }
-            _state.value = currentState.copy(grid = newGrid, score = currentState.score + 1)
-
-            currentState.lastFlippedIndex?.let { lastFlippedIndex ->
-                val lastFlippedCard = newGrid[lastFlippedIndex]
-                if (lastFlippedCard.imageRes == currentCard.imageRes && lastFlippedIndex != index) {
-                    // Match found, mark both cards as removed
-                    newGrid[index] = currentCard.copy(isRemoved = true)
-                    newGrid[lastFlippedIndex] = lastFlippedCard.copy(isRemoved = true)
-                    delay(500) // Short delay before removing cards
-                } else {
-                    // No match, flip them back after a delay
-                    delay(1000)
-                    newGrid[index] = currentCard.copy(isFlipped = false)
-                    newGrid[lastFlippedIndex] = lastFlippedCard.copy(isFlipped = false)
+            _state.update { oldState ->
+                val newGrid = oldState.grid.toMutableList().apply {
+                    this[index] = currentCard.copy(isFlipped = true)
                 }
-                _state.value = currentState.copy(grid = newGrid, lastFlippedIndex = null)
-            } ?: run {
-                // Update last flipped index if no previous card to compare
-                _state.value = currentState.copy(lastFlippedIndex = index)
+                oldState.copy(grid = newGrid, score = oldState.score + 1)
             }
 
-            if (newGrid.all { it.isRemoved }) {
-                _event.tryEmit(Event.NavigateToScoreDisplay(currentState.score))
+            val lastFlippedIndex = _state.value.lastFlippedIndex
+            val allCardsFlipped = _state.value.grid.all { it.isFlipped }
+            when {
+                allCardsFlipped -> _event.emit(Event.NavigateToScoreDisplay(_state.value.score))
+                lastFlippedIndex != null -> processFlippedCards(index, lastFlippedIndex)
+                else -> _state.update { it.copy(lastFlippedIndex = index) }
             }
         }
     }
 
-    private fun createDrawableList(size: Int, drawables: List<Int>): List<Int> {
-        val numberOfUniqueCards = (size * 0.25).toInt()
-        val uniqueCards = drawables.shuffled().take(numberOfUniqueCards)
-        val remainingCards =
-            (1..size - numberOfUniqueCards).flatMap { uniqueCards.shuffled().take(2) }
-        return (uniqueCards + remainingCards).shuffled().take(size)
+    private suspend fun processFlippedCards(index: Int, lastFlippedIndex: Int) {
+        delay(1000)
+        _state.update { oldState ->
+            val newGrid = oldState.grid.toMutableList()
+            val currentCard = newGrid[index]
+            val lastFlippedCard = newGrid[lastFlippedIndex]
+
+            if (lastFlippedCard.imageRes == currentCard.imageRes && lastFlippedIndex != index) {
+                // Match found, mark both cards as removed
+                newGrid[index] = currentCard.copy(isRemoved = true)
+                newGrid[lastFlippedIndex] = lastFlippedCard.copy(isRemoved = true)
+            } else {
+                // No match, flip them back
+                newGrid[index] = currentCard.copy(isFlipped = false)
+                newGrid[lastFlippedIndex] = lastFlippedCard.copy(isFlipped = false)
+            }
+            oldState.copy(grid = newGrid, lastFlippedIndex = null)
+        }
     }
+
+    private fun createDrawableList(size: Int, drawables: List<Int>): List<Int> {
+        val numberOfPairs = size / 2
+        val selectedImages = drawables.shuffled().take(numberOfPairs).toList()
+        val pairedImages = selectedImages + selectedImages
+
+        // Adjust for odd-sized grids
+        val finalCards = if (size % 2 != 0) {
+            // Check if there's any drawable not already in selectedImages
+            val extraImage = drawables.firstOrNull { it !in selectedImages }
+            if (extraImage != null) {
+                pairedImages + extraImage
+            } else {
+                // If no unique drawable is available, use a placeholder or repeat one of the existing drawables
+                pairedImages + selectedImages.first()
+            }
+        } else {
+            pairedImages
+        }
+
+        // Shuffle the final card list to randomize their distribution
+        return finalCards.shuffled()
+    }
+
 
     data class GameState(
         val grid: List<CardState> = emptyList(),
@@ -120,7 +142,7 @@ class GameViewModel : ViewModel() {
             R.drawable.img1, R.drawable.img2, R.drawable.img3,
             R.drawable.img4, R.drawable.img5, R.drawable.img6,
             R.drawable.img7, R.drawable.img8, R.drawable.img9,
-            R.drawable.img10
+            R.drawable.img10, R.drawable.img11, R.drawable.img12,
         )
     }
 }

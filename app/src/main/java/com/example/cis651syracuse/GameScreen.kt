@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -96,25 +97,25 @@ private fun GameGrid(
                 addAll(List(gameState.grid.size) { false })
             }
     }
-
+    val items = gameState.grid.filterNot { it.isRemoved }
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(gameState.columns),
         content = {
-            items(gameState.grid.size) { index ->
-                val isFaceUp = cardFaceUpState[index]
-                val animatedRotation = animateFloatAsState(
-                    targetValue = if (isFaceUp) 0f else 180f,
-                    animationSpec = tween(durationMillis = 300), label = ""
-                )
-                Card(
-                    drawableId = gameState.grid[index].imageRes,
-                    onClick = {
-                        cardFaceUpState[index] = !isFaceUp
-                        onAction(GameViewModel.Action.FlipCard(index))
-                    },
-                    rotationDegrees = animatedRotation.value
-                )
+            itemsIndexed(gameState.grid) { index, item ->
+                if (!item.isRemoved) {
+                    val animatedRotation = animateFloatAsState(
+                        targetValue = if (item.isFlipped) 0f else 180f,
+                        animationSpec = tween(durationMillis = 300), label = ""
+                    )
+                    Card(
+                        drawableId = item.imageRes,
+                        onClick = {
+                            onAction(GameViewModel.Action.FlipCard(index))
+                        },
+                        rotationDegrees = animatedRotation.value
+                    )
+                }
             }
         }
     )
