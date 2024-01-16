@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
-                        startActivity(GameActivity.newIntent(this@MainActivity, GameLevel.EASY))
+                        startActivity(GameActivity.newIntent(this@MainActivity, GameDifficulty.EASY))
                     }) {
                     Text(text = stringResource(id = R.string.easy))
                 }
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier
                     .fillMaxWidth(),
                     onClick = {
-                        startActivity(GameActivity.newIntent(this@MainActivity, GameLevel.MEDIUM))
+                        startActivity(GameActivity.newIntent(this@MainActivity, GameDifficulty.MEDIUM))
                     }) {
                     Text(text = stringResource(id = R.string.medium))
                 }
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                         startActivity(
                             GameActivity.newIntent(
                                 this@MainActivity,
-                                GameLevel.DIFFICULT
+                                GameDifficulty.DIFFICULT
                             )
                         )
                     }) {

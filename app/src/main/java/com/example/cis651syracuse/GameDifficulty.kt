@@ -1,6 +1,6 @@
 package com.example.cis651syracuse
 
-enum class GameLevel {
+enum class GameDifficulty {
     EASY,
     MEDIUM,
     DIFFICULT
