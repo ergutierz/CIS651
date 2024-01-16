@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cis651syracuse.databinding.ItemCardBinding
-import com.squareup.picasso.Picasso
 
 class GameCardAdapter(
     private val cards: List<Int>

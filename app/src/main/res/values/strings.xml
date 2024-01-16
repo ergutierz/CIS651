@@ -3,4 +3,5 @@
     <string name="easy">Easy</string>
     <string name="medium">Medium</string>
     <string name="difficult">Difficult</string>
+    <string name="title_activity_game">Memory Card Game</string>
 </resources>
