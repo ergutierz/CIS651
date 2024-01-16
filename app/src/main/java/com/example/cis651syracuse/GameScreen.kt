@@ -91,13 +91,6 @@ private fun GameGrid(
     gameState: GameViewModel.GameState,
     onAction: (action: GameViewModel.Action) -> Unit
 ) {
-    val cardFaceUpState = remember {
-        mutableStateListOf<Boolean>()
-            .apply {
-                addAll(List(gameState.grid.size) { false })
-            }
-    }
-    val items = gameState.grid.filterNot { it.isRemoved }
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(gameState.columns),
