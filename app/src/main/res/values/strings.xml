@@ -3,8 +3,9 @@
     <string name="easy">Easy</string>
     <string name="medium">Medium</string>
     <string name="difficult">Difficult</string>
-    <string name="title_activity_options">Game Difficulty Selection</string>
+    <string name="title_activity_deck">Game Deck</string>
     <string name="title_activity_game">Memory Card Game</string>
     <string name="title_activity_score">Score</string>
     <string name="final_score">Final Score: %s</string>
+    <string name="score_history_item">Score: %s - Date: %s</string>
 </resources>

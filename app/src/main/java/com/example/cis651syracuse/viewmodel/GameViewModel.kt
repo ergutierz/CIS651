@@ -1,8 +1,12 @@
-package com.example.cis651syracuse
+package com.example.cis651syracuse.viewmodel
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cis651syracuse.R
+import com.example.cis651syracuse.repository.GameRepository
+import com.example.cis651syracuse.util.GameDifficulty
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,10 +14,15 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GameViewModel : ViewModel() {
+@HiltViewModel
+class GameViewModel @Inject constructor(
+    private val gameRepository: GameRepository
+): ViewModel() {
 
     private val _state = MutableStateFlow(GameState())
     val state: StateFlow<GameState> = _state.asStateFlow()
@@ -21,11 +30,22 @@ class GameViewModel : ViewModel() {
     private val _event = MutableSharedFlow<Event>()
     val event: SharedFlow<Event> = _event.asSharedFlow()
 
+    init {
+        viewModelScope.launch {
+            val playerState = gameRepository.playerState.first()
+            initializeGame(playerState.difficulty)
+        }
+    }
+
     fun onAction(action: Action) {
         when (action) {
-            is Action.InitializeGame -> initializeGame(action.difficulty)
             is Action.FlipCard -> flipCard(action.index)
+            is Action.OnBackClicked -> navigateBack()
         }
+    }
+
+    private fun navigateBack() {
+        viewModelScope.launch { _event.emit(Event.NavigateToGameSelection) }
     }
 
     private fun initializeGame(difficulty: GameDifficulty) {
@@ -33,6 +53,7 @@ class GameViewModel : ViewModel() {
             GameDifficulty.EASY -> 3 to 3
             GameDifficulty.MEDIUM -> 4 to 4
             GameDifficulty.DIFFICULT -> 5 to 5
+            else -> 3 to 3
         }
         val cards = createDrawableList(rows * cols, cardImages)
         _state.update { oldState ->
@@ -48,32 +69,37 @@ class GameViewModel : ViewModel() {
     }
 
     private fun flipCard(index: Int) {
-        viewModelScope.launch {
-            val currentCard = _state.value.grid[index]
+        val currentCard = _state.value.grid[index]
 
-            if (currentCard.isFlipped || currentCard.isRemoved) return@launch
+        if (currentCard.isFlipped || currentCard.isRemoved) return
 
-            _state.update { oldState ->
-                val newGrid = oldState.grid.toMutableList().apply {
-                    this[index] = currentCard.copy(isFlipped = true)
-                }
-                oldState.copy(grid = newGrid, score = oldState.score + 1)
+        _state.update { oldState ->
+            val newGrid = oldState.grid.toMutableList().apply {
+                this[index] = currentCard.copy(isFlipped = true)
             }
+            oldState.copy(grid = newGrid, score = oldState.score + 1)
+        }
 
-            val lastFlippedIndex = _state.value.lastFlippedIndex
-            val allCardsFlipped = _state.value.grid.all { it.isFlipped }
-            when {
-                allCardsFlipped -> _event.emit(Event.NavigateToScoreDisplay(_state.value.score))
-                lastFlippedIndex != null -> processFlippedCards(index, lastFlippedIndex)
-                else -> _state.update { it.copy(lastFlippedIndex = index) }
-            }
+        val lastFlippedIndex = _state.value.lastFlippedIndex
+        val allCardsFlipped = _state.value.grid.all { it.isFlipped }
+        when {
+            allCardsFlipped -> navigateToScoreDisplay()
+            lastFlippedIndex != null -> processFlippedCards(index, lastFlippedIndex)
+            else -> _state.update { oldState -> oldState.copy(lastFlippedIndex = index) }
         }
     }
 
-    private suspend fun processFlippedCards(index: Int, lastFlippedIndex: Int) {
-        delay(1000)
-        _state.update { oldState ->
-            val newGrid = oldState.grid.toMutableList()
+    private fun navigateToScoreDisplay() {
+        viewModelScope.launch {
+            _event.emit(Event.NavigateToScoreDisplay)
+            gameRepository.updatePlayerCurrentScore(_state.value.score)
+        }
+    }
+
+    private fun processFlippedCards(index: Int, lastFlippedIndex: Int) {
+        viewModelScope.launch {
+            delay(1000)
+            val newGrid = _state.value.grid.toMutableList()
             val currentCard = newGrid[index]
             val lastFlippedCard = newGrid[lastFlippedIndex]
 
@@ -86,7 +112,9 @@ class GameViewModel : ViewModel() {
                 newGrid[index] = currentCard.copy(isFlipped = false)
                 newGrid[lastFlippedIndex] = lastFlippedCard.copy(isFlipped = false)
             }
-            oldState.copy(grid = newGrid, lastFlippedIndex = null)
+            _state.update { oldState ->
+                oldState.copy(grid = newGrid, lastFlippedIndex = null)
+            }
         }
     }
 
@@ -128,13 +156,14 @@ class GameViewModel : ViewModel() {
         val isRemoved: Boolean = false
     )
 
-    sealed class Action {
-        data class FlipCard(val index: Int) : Action()
-        data class InitializeGame(val difficulty: GameDifficulty) : Action()
+    sealed interface Action {
+        data class FlipCard(val index: Int) : Action
+        object OnBackClicked : Action
     }
 
-    sealed class Event {
-        data class NavigateToScoreDisplay(val score: Int) : Event()
+    sealed interface Event {
+        object NavigateToScoreDisplay : Event
+        object NavigateToGameSelection : Event
     }
 
     companion object {
