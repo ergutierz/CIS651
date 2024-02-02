@@ -17,6 +17,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "TMBD_API_BASE_URL", findProperty("TMBD_API_BASE_URL")?.toString().orEmpty())
+        buildConfigField("String", "TMDB_API_KEY", findProperty("TMDB_API_KEY")?.toString().orEmpty())
+        buildConfigField("String", "TMDB_AUTH_TOKEN", findProperty("TMDB_AUTH_TOKEN")?.toString().orEmpty())
     }
 
     buildTypes {
@@ -36,6 +39,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -55,6 +59,7 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -73,6 +78,17 @@ dependencies {
 
     // Lottie
     implementation("com.airbnb.android:lottie-compose:4.2.0")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+    implementation("io.coil-kt:coil:1.4.0")
+
+    implementation("com.squareup.moshi:moshi:1.14.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
 }
 
 kapt {
