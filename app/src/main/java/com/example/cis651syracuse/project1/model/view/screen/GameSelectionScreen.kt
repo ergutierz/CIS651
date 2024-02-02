@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.view.screen
+package com.example.cis651syracuse.project1.model.view.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -31,8 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cis651syracuse.R
-import com.example.cis651syracuse.util.GameDifficulty
-import com.example.cis651syracuse.viewmodel.GameSelectionViewModel
+import com.example.cis651syracuse.project1.model.util.GameDifficulty
+import com.example.cis651syracuse.project1.model.viewmodel.GameSelectionViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

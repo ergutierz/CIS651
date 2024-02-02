@@ -1,11 +1,11 @@
-package com.example.cis651syracuse.viewmodel
+package com.example.cis651syracuse.project1.model.viewmodel
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cis651syracuse.R
-import com.example.cis651syracuse.repository.GameRepository
-import com.example.cis651syracuse.util.GameDifficulty
+import com.example.cis651syracuse.project1.model.repository.GameRepository
+import com.example.cis651syracuse.project1.model.util.GameDifficulty
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

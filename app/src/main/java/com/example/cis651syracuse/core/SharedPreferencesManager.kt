@@ -1,10 +1,10 @@
-package com.example.cis651syracuse.util
+package com.example.cis651syracuse.core
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.cis651syracuse.model.GameScore
+import com.example.cis651syracuse.project1.model.GameScore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext

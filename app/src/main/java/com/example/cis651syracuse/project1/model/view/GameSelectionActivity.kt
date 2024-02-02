@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.view
+package com.example.cis651syracuse.project1.model.view
 
 import android.content.Context
 import android.content.Intent
@@ -9,8 +9,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.example.cis651syracuse.view.screen.GameSelectionScreen
-import com.example.cis651syracuse.viewmodel.GameSelectionViewModel
+import com.example.cis651syracuse.project1.model.view.screen.GameSelectionScreen
+import com.example.cis651syracuse.project1.model.viewmodel.GameSelectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

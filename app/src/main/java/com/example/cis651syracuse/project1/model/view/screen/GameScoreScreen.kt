@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.view.screen
+package com.example.cis651syracuse.project1.model.view.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cis651syracuse.R
-import com.example.cis651syracuse.viewmodel.GameScoreViewModel
+import com.example.cis651syracuse.project1.model.viewmodel.GameScoreViewModel
 
 @Composable
 fun GameScoreScreen(

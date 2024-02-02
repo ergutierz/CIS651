@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.view
+package com.example.cis651syracuse.project1.model.view
 
 import android.content.Context
 import android.content.Intent
@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.cis651syracuse.view.screen.GameScoreScreen
-import com.example.cis651syracuse.viewmodel.GameScoreViewModel
+import com.example.cis651syracuse.project1.model.view.screen.GameScoreScreen
+import com.example.cis651syracuse.project1.model.viewmodel.GameScoreViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

@@ -1,9 +1,9 @@
-package com.example.cis651syracuse.repository
+package com.example.cis651syracuse.project1.model.repository
 
-import com.example.cis651syracuse.model.GameScore
-import com.example.cis651syracuse.model.PlayerState
-import com.example.cis651syracuse.util.GameDifficulty
-import com.example.cis651syracuse.util.SharedPreferencesManager
+import com.example.cis651syracuse.project1.model.GameScore
+import com.example.cis651syracuse.project1.model.PlayerState
+import com.example.cis651syracuse.project1.model.util.GameDifficulty
+import com.example.cis651syracuse.core.SharedPreferencesManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
