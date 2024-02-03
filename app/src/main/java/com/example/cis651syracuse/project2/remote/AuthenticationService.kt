@@ -9,7 +9,7 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface AuthenticationService {
-    @GET("3/authentication/token/new")
+    @GET("authentication/token/new")
     suspend fun authenticate(
         @Query("api_key") apiKey: String = BuildConfig.TMDB_API_KEY
     ): Response<AuthenticationResponse>

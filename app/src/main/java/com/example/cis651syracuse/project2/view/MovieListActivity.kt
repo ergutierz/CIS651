@@ -24,7 +24,7 @@ class MovieListActivity : AppCompatActivity() {
                 modifier = Modifier.fillMaxSize(),
                 screen = Screen.Movies,
                 fragmentHost = {
-                    FragmentHost(fragment = MoviesFragment.newInstance())
+                    FragmentHost(fragment = MoviesFragment.newInstance)
                 },
                 onCloseClick = ::finish,
                 onNavItemClick = { screen ->

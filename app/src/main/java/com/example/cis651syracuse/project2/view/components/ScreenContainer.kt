@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.example.cis651syracuse.project2.util.Screen
 
 @Composable
@@ -29,10 +31,13 @@ fun ScreenContainer(
             )
         },
         drawerContent = {
-            NavigationDrawerContent(
-                scaffoldState = scaffoldState,
-                onNavItemClick = onNavItemClick
-            )
+            Surface(color = Color.Black) {
+                NavigationDrawerContent(
+                    modifier = Modifier.fillMaxSize(),
+                    scaffoldState = scaffoldState,
+                    onNavItemClick = onNavItemClick
+                )
+            }
         },
         content = { padding ->
             Box(

@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import com.example.cis651syracuse.project2.view.screen.AboutScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AboutFragment : Fragment() {
 
     override fun onCreateView(
@@ -33,6 +35,6 @@ class AboutFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() = AboutFragment()
+        val newInstance get() = AboutFragment()
     }
 }

@@ -5,16 +5,22 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import androidx.fragment.app.viewModels
 import com.example.cis651syracuse.project2.util.NavUtil
 import com.example.cis651syracuse.project2.util.Screen
 import com.example.cis651syracuse.project2.view.components.FragmentHost
 import com.example.cis651syracuse.project2.view.components.ScreenContainer
+import com.example.cis651syracuse.project2.viewmodel.DashboardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DashboardActivity : AppCompatActivity() {
+
+    private val viewModel: DashboardViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -22,7 +28,7 @@ class DashboardActivity : AppCompatActivity() {
                 modifier = Modifier.fillMaxSize(),
                 screen = Screen.Dashboard,
                 fragmentHost = {
-                    FragmentHost(fragment = AboutFragment.newInstance())
+                    FragmentHost(fragment = AboutFragment.newInstance)
                 },
                 onNavItemClick = { screen ->
                     NavUtil.navigateTo(this, Screen.Dashboard, screen)?.let {
@@ -31,6 +37,11 @@ class DashboardActivity : AppCompatActivity() {
                 }
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onAction(DashboardViewModel.Action.Authenticate)
     }
 
     companion object {

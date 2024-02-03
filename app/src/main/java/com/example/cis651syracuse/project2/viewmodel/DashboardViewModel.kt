@@ -14,14 +14,16 @@ class DashboardViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository
 ) : ViewModel() {
 
-    init {
-        authenticate()
+    fun onAction(action: Action) {
+        when (action) {
+            is Action.Authenticate -> authenticate()
+        }
     }
 
     private fun authenticate() {
         viewModelScope.launch {
             val response = authenticationRepository.authenticate()
-            if (response.success == true) {
+            if (response?.success == true) {
                 fetchMovies()
             }
         }
@@ -29,7 +31,11 @@ class DashboardViewModel @Inject constructor(
 
     private fun fetchMovies() {
         viewModelScope.launch {
-            val response = moviesRepository.getPopularMovies()
+             moviesRepository.getPopularMovies()
         }
+    }
+
+    sealed interface Action {
+        object Authenticate : Action
     }
 }

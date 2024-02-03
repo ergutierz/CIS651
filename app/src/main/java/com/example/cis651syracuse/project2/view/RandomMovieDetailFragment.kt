@@ -25,6 +25,6 @@ class RandomMovieDetailFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() = RandomMovieDetailFragment()
+        val newInstance get() = RandomMovieDetailFragment()
     }
 }

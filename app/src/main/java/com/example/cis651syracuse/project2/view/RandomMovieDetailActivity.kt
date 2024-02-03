@@ -22,7 +22,7 @@ class RandomMovieDetailActivity : AppCompatActivity() {
                 modifier = Modifier.fillMaxSize(),
                 screen = Screen.RandomMovie,
                 fragmentHost = {
-                    FragmentHost(fragment = RandomMovieDetailFragment.newInstance())
+                    FragmentHost(fragment = RandomMovieDetailFragment.newInstance)
                 },
                 onCloseClick = ::finish,
                 onNavItemClick = { screen ->
