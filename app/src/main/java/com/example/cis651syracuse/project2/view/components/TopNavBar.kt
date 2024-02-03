@@ -3,6 +3,7 @@ package com.example.cis651syracuse.project2.view.components
 import androidx.compose.foundation.clickable
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -38,7 +39,7 @@ fun TopNavBar(
                         scaffoldState.drawerState.open()
                     }
                 },
-                imageVector = if (screen.isDashboard) Icons.Filled.Menu else Icons.Filled.Close,
+                imageVector = if (screen.isDashboard) Icons.Filled.Menu else Icons.Filled.ArrowBack,
                 contentDescription = if (screen.isDashboard) "Menu" else "Close",
                 tint = Color(0xFFFFD700)
             )

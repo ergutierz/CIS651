@@ -15,6 +15,7 @@ import com.example.cis651syracuse.project2.util.Screen
 fun ScreenContainer(
     modifier: Modifier = Modifier,
     screen: Screen,
+    drawerGesturesEnabled: Boolean = false,
     fragmentHost: @Composable () -> Unit,
     onCloseClick: () -> Unit = {},
     onNavItemClick: (screen: Screen) -> Unit
@@ -30,6 +31,7 @@ fun ScreenContainer(
                 onCloseClick = onCloseClick
             )
         },
+        drawerGesturesEnabled = drawerGesturesEnabled,
         drawerContent = {
             Surface(color = Color.Black) {
                 NavigationDrawerContent(

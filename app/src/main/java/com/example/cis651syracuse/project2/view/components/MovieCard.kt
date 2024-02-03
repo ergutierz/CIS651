@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun MovieCard(
+    modifier: Modifier = Modifier,
     movie: Movie,
     onAction: (action: MovieListViewModel.Action) -> Unit
 ) {
@@ -42,8 +43,8 @@ fun MovieCard(
     )
 
     Card(
-        modifier = Modifier.padding(8.dp).fillMaxWidth().clickable {
-            onAction(MovieListViewModel.Action.NavigateToDetail(movie.id ?: -1))
+        modifier = modifier.padding(8.dp).fillMaxWidth().clickable {
+            onAction(MovieListViewModel.Action.DisplayMovieDetail(movie.id ?: -1))
         },
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp),

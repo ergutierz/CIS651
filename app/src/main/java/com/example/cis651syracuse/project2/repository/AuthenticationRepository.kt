@@ -12,14 +12,18 @@ import javax.inject.Singleton
 class AuthenticationRepository @Inject constructor(
     private val authenticationService: AuthenticationService
 ) {
-    suspend fun authenticate(): AuthenticationResponse? = withContext(Dispatchers.IO) {
+    suspend fun authenticate() = withContext(Dispatchers.IO) {
         runCatching { authenticationService.authenticate() }.fold(
-            onSuccess = {
-                it.body()
+            onSuccess = { response ->
+                val responseBody = response.body()
+                if (responseBody?.success == true) {
+                    Log.e("AuthenticationRepository", "Authentication successful")
+                } else {
+                    Log.e("AuthenticationRepository", "Authentication failed with message: ${responseBody?.statusMessage}")
+                }
             },
             onFailure = {
                 Log.e("AuthenticationRepository", "Failed to authenticate", it)
-                null
             }
         )
     }

@@ -21,36 +21,31 @@ class MoviesRepository @Inject constructor(
     private val _moviesState = MutableStateFlow<List<Movie>>(emptyList())
     val moviesState: StateFlow<List<Movie>> = _moviesState.asStateFlow()
 
-    private val _movieDetailState = MutableStateFlow<Set<MovieDetailResponse>>(setOf())
-    val movieDetailState: StateFlow<Set<MovieDetailResponse>> = _movieDetailState.asStateFlow()
-
-    suspend fun getPopularMovies() {
-        if (_moviesState.value.isNotEmpty()) return
-        withContext(Dispatchers.IO) {
-            runCatching { movieService.getPopularMovies(language = "en-US", page = 1) }.fold(
-                onSuccess = { response ->
-                    response.body()?.results?.let { results ->
-                        _moviesState.update { results.mapNotNull { movie -> movie } }
+    suspend fun getPopularMovies(): List<Movie?> {
+        return _moviesState.value.ifEmpty {
+            withContext(Dispatchers.IO) {
+                runCatching { movieService.getPopularMovies(language = "en-US", page = 1) }.fold(
+                    onSuccess = { response ->
+                        (response.body()?.results ?: emptyList()).also { results ->
+                            _moviesState.update { results.mapNotNull { result -> result } }
+                        }
+                    },
+                    onFailure = {
+                        Log.e("MoviesRepository", "Failed to load movies", it)
+                        emptyList()
                     }
-                },
-                onFailure = {
-                    Log.e("MoviesRepository", "Failed to load movies", it)
-                }
-            )
+                )
+            }
         }
     }
 
-    suspend fun getMovieDetail(movieId: Int) {
-        if (_movieDetailState.value.any { it.id == movieId }) return
-        withContext(Dispatchers.IO) {
+    suspend fun getMovieDetail(movieId: Int): MovieDetailResponse? {
+        return withContext(Dispatchers.IO) {
             runCatching { movieService.getMovieDetail(movieId, language = "en-US") }.fold(
-                onSuccess = { response ->
-                    response.body()?.let { movieDetail ->
-                        _movieDetailState.update { it.toMutableSet().apply { add(movieDetail) } }
-                    }
-                },
+                onSuccess = { response -> response.body() },
                 onFailure = {
                     Log.e("MoviesRepository", "Failed to load movie detail", it)
+                    null
                 }
             )
         }

@@ -27,6 +27,7 @@ class DashboardActivity : AppCompatActivity() {
             ScreenContainer(
                 modifier = Modifier.fillMaxSize(),
                 screen = Screen.Dashboard,
+                drawerGesturesEnabled = true,
                 fragmentHost = {
                     FragmentHost(fragment = AboutFragment.newInstance)
                 },

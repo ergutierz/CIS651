@@ -23,44 +23,68 @@ class MovieListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            moviesRepository.moviesState.collect { movies ->
-                _viewState.update { it.copy(movies = movies) }
-            }
-        }
-        viewModelScope.launch {
-            moviesRepository.movieDetailState.collect { movieDetail ->
-                _viewState.update { oldState ->
-                    val detail = movieDetail.find { it.id == oldState.selectedMovieId }
-                    oldState.copy(
-                        movieDetail = detail ?: oldState.movieDetail,
-                        shouldDisplayList = detail != null
-                    )
-                }
-            }
+            moviesRepository.getPopularMovies()
         }
     }
 
     fun onAction(action: Action) {
         when (action) {
-            is Action.NavigateToDetail -> navigateToDetail(action.movieId)
+            is Action.DisplayMovieDetail -> displayMovieDetail(action.movieId)
+            is Action.GetPopularMovies -> getPopularMovies()
+            is Action.DisplayList -> displayList()
         }
     }
 
-    private fun navigateToDetail(movieId: Int) {
-        _viewState.update { it.copy(selectedMovieId = movieId)}
+    private fun displayList() {
+        _viewState.update { it.copy(displayList = true) }
+    }
+
+    private fun getPopularMovies() {
+        setLoadingState(true)
         viewModelScope.launch {
-            moviesRepository.getMovieDetail(movieId)
+            val response = moviesRepository.getPopularMovies()
+            val movies = response.mapNotNull { it }
+            _viewState.update { oldState ->
+                oldState.copy(
+                    movies = movies,
+                    displayError = movies.isEmpty(),
+                    displayList = movies.isNotEmpty(),
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+    private fun setLoadingState(isLoading: Boolean) {
+        _viewState.update { it.copy(isLoading = isLoading) }
+    }
+
+    private fun displayMovieDetail(movieId: Int) {
+        setLoadingState(true)
+        viewModelScope.launch {
+            val response = moviesRepository.getMovieDetail(movieId)
+            _viewState.update { oldState ->
+                oldState.copy(
+                    movieDetail = response,
+                    displayError = response == null,
+                    displayList = false,
+                    isLoading = false
+                )
+            }
         }
     }
 
     data class ViewState(
         val movies: List<Movie> = emptyList(),
-        val movieDetail: MovieDetailResponse = MovieDetailResponse(),
-        val selectedMovieId: Int = -1,
-        val shouldDisplayList: Boolean = true
+        val movieDetail: MovieDetailResponse? = null,
+        val isLoading: Boolean = false,
+        val displayError: Boolean = false,
+        val displayList: Boolean = false
     )
 
     sealed interface Action {
-        data class NavigateToDetail(val movieId: Int) : Action
+        data class DisplayMovieDetail(val movieId: Int) : Action
+        object GetPopularMovies : Action
+        object DisplayList : Action
     }
 }

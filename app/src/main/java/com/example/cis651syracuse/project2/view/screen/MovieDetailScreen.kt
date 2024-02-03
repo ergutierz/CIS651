@@ -24,70 +24,75 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cis651syracuse.BuildConfig
 import com.example.cis651syracuse.project2.model.MovieDetailResponse
+import com.example.cis651syracuse.project2.view.components.DisplayDetailScreenError
 import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun MovieDetailScreen(movieDetail: MovieDetailResponse) {
+fun MovieDetailScreen(movieDetail: MovieDetailResponse?) {
     val typography = Typography(
         h4 = TextStyle(fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold, fontSize = 28.sp, color = Color(0xFFFFD700)),
         body1 = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White),
         subtitle1 = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Light, fontSize = 14.sp, color = Color(0xFFCCCCCC))
     )
 
-    Column(
-        modifier = Modifier
-            .background(Color.Black)
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        movieDetail.posterPath?.let { path ->
-            val imageUrl = "${BuildConfig.TMBD_POSTER_URL_BASE}$path"
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .dispatcher(Dispatchers.IO)
-                    .memoryCacheKey(imageUrl)
-                    .diskCacheKey(imageUrl)
-                    .data(imageUrl)
-                    .diskCachePolicy(CachePolicy.ENABLED)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
-                    .build(),
-                contentDescription = "${movieDetail.title} poster",
-                modifier = Modifier.fillMaxWidth().height(200.dp),
-                contentScale = ContentScale.Crop
-            )
-        }
+    if (movieDetail != null) {
+        Column(
+            modifier = Modifier
+                .background(Color.Black)
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            movieDetail.posterPath?.let { path ->
+                val imageUrl = "${BuildConfig.TMBD_POSTER_URL_BASE}$path"
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .dispatcher(Dispatchers.IO)
+                        .memoryCacheKey(imageUrl)
+                        .diskCacheKey(imageUrl)
+                        .data(imageUrl)
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .build(),
+                    contentDescription = "${movieDetail.title} poster",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
-        Text(
-            text = movieDetail.title ?: "",
-            style = typography.h4
-        )
-
-        Text(
-            text = "Release date: ${movieDetail.releaseDate}",
-            style = typography.subtitle1
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        movieDetail.genres?.let { genres ->
             Text(
-                text = "Genres: ${genres.joinToString { it?.name ?: "" }}",
+                text = movieDetail.title ?: "",
+                style = typography.h4
+            )
+
+            Text(
+                text = "Release date: ${movieDetail.releaseDate}",
                 style = typography.subtitle1
             )
+
+            Spacer(Modifier.height(8.dp))
+
+            movieDetail.genres?.let { genres ->
+                Text(
+                    text = "Genres: ${genres.joinToString { it?.name ?: "" }}",
+                    style = typography.subtitle1
+                )
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                text = "Runtime: ${movieDetail.runtime} minutes",
+                style = typography.subtitle1
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                text = "Overview: ${movieDetail.overview}",
+                style = typography.body1
+            )
         }
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            text = "Runtime: ${movieDetail.runtime} minutes",
-            style = typography.subtitle1
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            text = "Overview: ${movieDetail.overview}",
-            style = typography.body1
-        )
-    }
+    } else DisplayDetailScreenError()
 }
