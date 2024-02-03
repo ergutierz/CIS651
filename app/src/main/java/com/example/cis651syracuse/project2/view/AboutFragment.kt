@@ -12,7 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
-import com.example.cis651syracuse.project2.view.screen.AboutScreen
+import com.example.cis651syracuse.project2.view.screen.MovieAboutScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,7 @@ class AboutFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                AboutScreen(
+                MovieAboutScreen(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState())
                         .fillMaxSize()

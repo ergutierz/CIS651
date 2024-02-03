@@ -2,16 +2,17 @@ package com.example.cis651syracuse.project2.util
 
 import android.content.Context
 import android.content.Intent
-import com.example.cis651syracuse.project2.view.DashboardActivity
-import com.example.cis651syracuse.project2.view.MovieListActivity
-import com.example.cis651syracuse.project2.view.RandomMovieDetailActivity
+import com.example.cis651syracuse.project2.view.MovieAboutActivity
+import com.example.cis651syracuse.project2.view.MovieListDetailActivity
+import com.example.cis651syracuse.project2.view.MovieViewPagerActivity
 
 object NavUtil {
     fun navigateTo(context: Context, currentScreen: Screen, screen: Screen): Intent? {
         return when (screen) {
-            Screen.Movies -> MovieListActivity.newIntent(context)
-            Screen.Dashboard -> DashboardActivity.newIntent(context)
-            Screen.RandomMovie -> RandomMovieDetailActivity.newIntent(context)
+            Screen.Movies -> MovieListDetailActivity.newIntent(context)
+            Screen.MovieDetail -> MovieListDetailActivity.newIntent(context)
+            Screen.Dashboard -> MovieAboutActivity.newIntent(context)
+            Screen.MovieViewPager -> MovieViewPagerActivity.newIntent(context)
         }.takeUnless { currentScreen == screen }
     }
 }

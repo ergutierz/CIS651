@@ -18,8 +18,12 @@ class MoviesRepository @Inject constructor(
     private val movieService: MovieService
 ) {
 
+    private val _selectedMovies = MutableStateFlow<List<MovieDetailResponse>>(emptyList())
     private val _moviesState = MutableStateFlow<List<Movie>>(emptyList())
-    val moviesState: StateFlow<List<Movie>> = _moviesState.asStateFlow()
+    private val _selectedMovieId = MutableStateFlow(-1)
+    val selectedMovieId: StateFlow<Int> get() = _selectedMovieId.asStateFlow()
+    private val _isDetailVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isDetailVisible: StateFlow<Boolean> get() = _isDetailVisible.asStateFlow()
 
     suspend fun getPopularMovies(): List<Movie?> {
         return _moviesState.value.ifEmpty {
@@ -39,15 +43,36 @@ class MoviesRepository @Inject constructor(
         }
     }
 
-    suspend fun getMovieDetail(movieId: Int): MovieDetailResponse? {
-        return withContext(Dispatchers.IO) {
-            runCatching { movieService.getMovieDetail(movieId, language = "en-US") }.fold(
-                onSuccess = { response -> response.body() },
-                onFailure = {
-                    Log.e("MoviesRepository", "Failed to load movie detail", it)
-                    null
-                }
-            )
-        }
+    suspend fun getMovieDetail(): MovieDetailResponse? {
+        return _selectedMovies.value.find { cachedSelectedMovie -> cachedSelectedMovie.id == _selectedMovieId.value }
+            ?: withContext(Dispatchers.IO) {
+                runCatching {
+                    movieService.getMovieDetail(_selectedMovieId.value, language = "en-US")
+                        .also { response ->
+                            _selectedMovies.update {
+                                it.toMutableList()
+                                    .apply { response.body()?.let { movie -> add(movie) } }
+                            }
+                        }
+                }.fold(
+                    onSuccess = { response -> response.body() },
+                    onFailure = {
+                        Log.e("MoviesRepository", "Failed to load movie detail", it)
+                        null
+                    }
+                )
+            }
+    }
+
+    fun selectMovie(movieId: Int) {
+        _selectedMovieId.update { movieId }
+    }
+
+    fun displayDetail() {
+        _isDetailVisible.update { true }
+    }
+
+    fun hideDetail() {
+        _isDetailVisible.update { false }
     }
 }

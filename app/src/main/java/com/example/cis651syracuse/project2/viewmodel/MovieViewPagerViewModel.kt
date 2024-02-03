@@ -3,6 +3,7 @@ package com.example.cis651syracuse.project2.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cis651syracuse.project2.model.Movie
+import com.example.cis651syracuse.project2.model.MovieDetailResponse
 import com.example.cis651syracuse.project2.repository.MoviesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,16 +14,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(
+class MovieViewPagerViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(ViewState())
-    val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
+    val viewState: StateFlow<ViewState> get() = _viewState.asStateFlow()
 
     fun onAction(action: Action) {
         when (action) {
-            is Action.DisplayMovieDetail -> displayMovieDetail(action.movieId)
             is Action.GetPopularMovies -> getPopularMovies()
         }
     }
@@ -36,7 +36,7 @@ class MovieListViewModel @Inject constructor(
                 oldState.copy(
                     movies = movies,
                     displayError = movies.isEmpty(),
-                    displayList = movies.isNotEmpty(),
+                    displayCarousel = movies.isNotEmpty(),
                     isLoading = false
                 )
             }
@@ -47,20 +47,14 @@ class MovieListViewModel @Inject constructor(
         _viewState.update { it.copy(isLoading = isLoading) }
     }
 
-    private fun displayMovieDetail(movieId: Int) {
-        moviesRepository.selectMovie(movieId)
-        moviesRepository.displayDetail()
-    }
-
     data class ViewState(
-        val movies: List<Movie> = emptyList(),
         val isLoading: Boolean = false,
-        val displayError: Boolean = false,
-        val displayList: Boolean = false
+        val movies: List<Movie> = emptyList(),
+        val displayCarousel: Boolean = false,
+        val displayError: Boolean = false
     )
 
     sealed interface Action {
-        data class DisplayMovieDetail(val movieId: Int) : Action
         object GetPopularMovies : Action
     }
 }

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.example.cis651syracuse.R
 
 @Composable
-fun AboutScreen(modifier: Modifier = Modifier) {
+fun MovieAboutScreen(modifier: Modifier = Modifier) {
     val typography = Typography(
         h4 = TextStyle(fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold, fontSize = 30.sp, color = Color(0xFFFFD700)),
         body1 = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White)

@@ -35,7 +35,7 @@ import kotlinx.coroutines.Dispatchers
 fun MovieCard(
     modifier: Modifier = Modifier,
     movie: Movie,
-    onAction: (action: MovieListViewModel.Action) -> Unit
+    onAction: (action: MovieListViewModel.Action) -> Unit = {}
 ) {
     val typography = Typography(
         h6 = TextStyle(fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = Color(0xFFFFD700)),
@@ -43,7 +43,7 @@ fun MovieCard(
     )
 
     Card(
-        modifier = modifier.padding(8.dp).fillMaxWidth().clickable {
+        modifier = modifier.padding(8.dp).clickable {
             onAction(MovieListViewModel.Action.DisplayMovieDetail(movie.id ?: -1))
         },
         elevation = 4.dp,
@@ -64,8 +64,8 @@ fun MovieCard(
                         .memoryCachePolicy(CachePolicy.ENABLED)
                         .build(),
                     contentDescription = "${movie.title} poster",
-                    modifier = Modifier.fillMaxWidth().height(200.dp),
-                    contentScale = ContentScale.Crop
+                    modifier = Modifier.fillMaxWidth().height(300.dp).padding(all = 16.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
             Text(text = movie.title ?: "", style = typography.h6, modifier = Modifier.padding(8.dp))

@@ -9,31 +9,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.example.cis651syracuse.project2.util.NavUtil
 import com.example.cis651syracuse.project2.util.Screen
-import com.example.cis651syracuse.project2.view.components.FragmentHost
 import com.example.cis651syracuse.project2.view.components.ScreenContainer
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MovieListActivity : AppCompatActivity() {
-
-    private var onCloseDetailListener: (() -> Unit) = {}
-    private val fragment = MoviesFragment.newInstance.apply {
-        onCloseDetailListener = ::onCloseDetailListener
-    }
-
+class MovieViewPagerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ScreenContainer(
                 modifier = Modifier.fillMaxSize(),
-                screen = Screen.Movies,
-                fragmentHost = { FragmentHost(fragment) },
-                onCloseClick = {
-                    if (fragment.isListScreen) finish()
-                    else onCloseDetailListener()
-                },
+                screen = Screen.MovieViewPager,
+                fragment = ViewPagerFragment.newInstance,
+                onCloseClick = ::finish,
                 onNavItemClick = { screen ->
-                    NavUtil.navigateTo(this, Screen.Movies, screen)?.let {
+                    NavUtil.navigateTo(this, Screen.MovieViewPager, screen)?.let {
                         startActivity(it)
                     }
                 }
@@ -43,7 +33,7 @@ class MovieListActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, MovieListActivity::class.java)
+            return Intent(context, MovieViewPagerActivity::class.java)
         }
     }
 }

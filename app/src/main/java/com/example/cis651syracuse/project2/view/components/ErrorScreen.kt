@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.cis651syracuse.R
 
 @Composable
-fun DisplayDetailScreenError() {
+fun ErrorScreen() {
     val typography = Typography(
         h4 = TextStyle(
             fontFamily = FontFamily.Serif,

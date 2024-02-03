@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.project2.view.components
+package com.example.cis651syracuse.project2.view.screen
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -15,37 +15,36 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import kotlin.math.absoluteValue
 import com.example.cis651syracuse.project2.model.Movie
+import com.example.cis651syracuse.project2.view.components.MovieCard
 import com.example.cis651syracuse.project2.viewmodel.MovieListViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MoviesViewPager(
-    movies: List<Movie>,
-    onAction: (action: MovieListViewModel.Action) -> Unit
+fun MoviesViewPagerScreen(
+    movies: List<Movie>
 ) {
     val pagerState = rememberPagerState(pageCount = {movies.size})
     val coroutineScope = rememberCoroutineScope()
     val tabs = movies.map { it.title ?: "Untitled" }
 
     Column {
-        // Adjust TabRow to have a black background and golden letters and indicator
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
-            backgroundColor = Color.Black, // Black background
-            contentColor = Color(0xFFFFD700), // Golden content
+            backgroundColor = Color.Black,
+            contentColor = Color(0xFFFFD700),
             edgePadding = 16.dp,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                     height = 3.dp,
-                    color = Color(0xFFFFD700) // Golden indicator
+                    color = Color(0xFFFFD700)
                 )
             }
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
-                    text = { Text(title, color = Color(0xFFFFD700)) }, // Golden text
+                    text = { Text(title, color = Color(0xFFFFD700)) },
                     selected = pagerState.currentPage == index,
                     onClick = {
                         coroutineScope.launch {
@@ -76,7 +75,7 @@ fun MoviesViewPager(
                     }
                     .fillMaxSize()
             ) {
-                MovieCard(movie = movies[page], onAction = onAction)
+                MovieCard(movie = movies[page])
             }
         }
     }

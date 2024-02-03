@@ -24,11 +24,14 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cis651syracuse.BuildConfig
 import com.example.cis651syracuse.project2.model.MovieDetailResponse
-import com.example.cis651syracuse.project2.view.components.DisplayDetailScreenError
+import com.example.cis651syracuse.project2.view.components.ErrorScreen
 import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun MovieDetailScreen(movieDetail: MovieDetailResponse?) {
+fun MovieDetailScreen(
+    modifier: Modifier = Modifier,
+    movieDetail: MovieDetailResponse?
+) {
     val typography = Typography(
         h4 = TextStyle(fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold, fontSize = 28.sp, color = Color(0xFFFFD700)),
         body1 = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White),
@@ -37,9 +40,8 @@ fun MovieDetailScreen(movieDetail: MovieDetailResponse?) {
 
     if (movieDetail != null) {
         Column(
-            modifier = Modifier
+            modifier = modifier.fillMaxSize()
                 .background(Color.Black)
-                .fillMaxSize()
                 .padding(16.dp)
         ) {
             movieDetail.posterPath?.let { path ->
@@ -94,5 +96,5 @@ fun MovieDetailScreen(movieDetail: MovieDetailResponse?) {
                 style = typography.body1
             )
         }
-    } else DisplayDetailScreenError()
+    } else ErrorScreen()
 }

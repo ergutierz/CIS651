@@ -9,6 +9,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.fragment.app.Fragment
 import com.example.cis651syracuse.project2.util.Screen
 
 @Composable
@@ -16,7 +17,8 @@ fun ScreenContainer(
     modifier: Modifier = Modifier,
     screen: Screen,
     drawerGesturesEnabled: Boolean = false,
-    fragmentHost: @Composable () -> Unit,
+    fragment: Fragment = Fragment(),
+    masterDetailHost: @Composable (() -> Unit)? = null,
     onCloseClick: () -> Unit = {},
     onNavItemClick: (screen: Screen) -> Unit
 ) {
@@ -47,7 +49,8 @@ fun ScreenContainer(
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                fragmentHost()
+                if (masterDetailHost != null) masterDetailHost()
+                else FragmentHost(fragment = fragment, modifier = Modifier.fillMaxSize())
             }
         }
     )

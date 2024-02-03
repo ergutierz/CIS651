@@ -57,7 +57,7 @@ fun NavigationDrawerContent(
                 ThemedSeparator()
                 DrawerItem(Screen.Dashboard, scaffoldState, onNavItemClick, typography)
                 DrawerItem(Screen.Movies, scaffoldState, onNavItemClick, typography)
-                DrawerItem(Screen.RandomMovie, scaffoldState, onNavItemClick, typography)
+                DrawerItem(Screen.MovieViewPager, scaffoldState, onNavItemClick, typography)
             }
         }
         Spacer(

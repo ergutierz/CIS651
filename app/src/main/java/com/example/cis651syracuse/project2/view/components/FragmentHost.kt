@@ -13,11 +13,12 @@ import androidx.fragment.app.Fragment
 
 @Composable
 fun FragmentHost(
-    fragment: Fragment
+    fragment: Fragment,
+    modifier: Modifier = Modifier
 ) {
     Surface(color = Color.Black) {
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier,
             factory = { context ->
                 val viewGroup = FrameLayout(context).apply {
                     id = View.generateViewId()

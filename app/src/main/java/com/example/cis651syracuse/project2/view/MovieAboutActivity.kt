@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import androidx.fragment.app.viewModels
 import com.example.cis651syracuse.project2.util.NavUtil
 import com.example.cis651syracuse.project2.util.Screen
 import com.example.cis651syracuse.project2.view.components.FragmentHost
@@ -17,7 +16,7 @@ import com.example.cis651syracuse.project2.viewmodel.DashboardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DashboardActivity : AppCompatActivity() {
+class MovieAboutActivity : AppCompatActivity() {
 
     private val viewModel: DashboardViewModel by viewModels()
 
@@ -28,9 +27,7 @@ class DashboardActivity : AppCompatActivity() {
                 modifier = Modifier.fillMaxSize(),
                 screen = Screen.Dashboard,
                 drawerGesturesEnabled = true,
-                fragmentHost = {
-                    FragmentHost(fragment = AboutFragment.newInstance)
-                },
+                fragment = AboutFragment.newInstance,
                 onNavItemClick = { screen ->
                     NavUtil.navigateTo(this, Screen.Dashboard, screen)?.let {
                         startActivity(it)
@@ -47,7 +44,7 @@ class DashboardActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, DashboardActivity::class.java)
+            return Intent(context, MovieAboutActivity::class.java)
         }
     }
 }
