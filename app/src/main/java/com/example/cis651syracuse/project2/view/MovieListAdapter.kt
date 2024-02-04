@@ -6,9 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cis651syracuse.project2.model.Movie
-import com.example.cis651syracuse.project2.view.components.AdaptiveMovieCard
 import com.example.cis651syracuse.project2.view.components.LeftOrientedAdaptiveMovieCard
-import com.example.cis651syracuse.project2.view.components.MovieCard
 import com.example.cis651syracuse.project2.viewmodel.MovieListViewModel
 
 class MovieListAdapter(

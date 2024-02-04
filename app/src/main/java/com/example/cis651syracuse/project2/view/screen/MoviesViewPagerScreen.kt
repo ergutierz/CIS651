@@ -1,6 +1,5 @@
 package com.example.cis651syracuse.project2.view.screen
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -8,14 +7,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.*
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import kotlin.math.absoluteValue
 import com.example.cis651syracuse.project2.model.Movie
-import com.example.cis651syracuse.project2.view.components.MovieCard
+import com.example.cis651syracuse.project2.view.PageFragment
+import com.example.cis651syracuse.project2.view.components.PagerFragmentHost
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -23,7 +20,7 @@ import kotlinx.coroutines.launch
 fun MoviesViewPagerScreen(
     movies: List<Movie>
 ) {
-    val pagerState = rememberPagerState(pageCount = {movies.size})
+    val pagerState = rememberPagerState(pageCount = { movies.size })
     val coroutineScope = rememberCoroutineScope()
     val tabs = movies.map { it.title ?: "Untitled" }
 
@@ -58,24 +55,9 @@ fun MoviesViewPagerScreen(
             state = pagerState,
             modifier = Modifier.weight(1f)
         ) { page ->
-            val pageOffset = remember { mutableStateOf(0f) }
-            LaunchedEffect(pagerState.currentPageOffsetFraction) {
-                pageOffset.value = pagerState.currentPageOffsetFraction
-            }
-            val animatedAlpha = animateFloatAsState(
-                targetValue = 1f - pageOffset.value.absoluteValue, label = ""
-            ).value
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .graphicsLayer {
-                        alpha = animatedAlpha
-                    }
-                    .fillMaxSize()
-            ) {
-                MovieCard(movie = movies[page])
-            }
+            PagerFragmentHost(
+                fragment = PageFragment.newInstance.apply { movie = movies[page] }
+            )
         }
     }
 }
