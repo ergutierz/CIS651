@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cis651syracuse.project2.model.MovieDetailResponse
 import com.example.cis651syracuse.project2.repository.MoviesRepository
+import com.example.cis651syracuse.project2.util.DeviceUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,7 @@ class MovieDetailViewModel @Inject constructor(
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
 
     init {
-        val isLargeScreen = context.resources.configuration.screenWidthDp >= 600
+        val isLargeScreen = DeviceUtils.isTablet(context)
         if (isLargeScreen) {
             viewModelScope.launch {
                 moviesRepository.selectedMovieId.collect { movieId ->

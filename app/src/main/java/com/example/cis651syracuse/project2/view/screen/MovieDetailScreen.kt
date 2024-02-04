@@ -1,12 +1,17 @@
 package com.example.cis651syracuse.project2.view.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
@@ -40,7 +45,9 @@ fun MovieDetailScreen(
 
     if (movieDetail != null) {
         Column(
-            modifier = modifier.fillMaxSize()
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .background(Color.Black)
                 .padding(16.dp)
         ) {
@@ -57,8 +64,7 @@ fun MovieDetailScreen(
                         .build(),
                     contentDescription = "${movieDetail.title} poster",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
+                        .fillMaxWidth(),
                     contentScale = ContentScale.Crop
                 )
             }

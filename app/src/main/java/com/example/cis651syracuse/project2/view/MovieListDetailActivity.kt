@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.example.cis651syracuse.project2.util.DeviceUtils
 import com.example.cis651syracuse.project2.util.NavUtil
 import com.example.cis651syracuse.project2.util.Screen
 import com.example.cis651syracuse.project2.view.components.FragmentHost
@@ -24,8 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MovieListDetailActivity : AppCompatActivity() {
 
     private val viewModel: MovieListDetailViewModel by viewModels()
-    private val isLargeDisplay: Boolean
-        get() = resources.configuration.screenWidthDp >= 600
+    private val isLargeDisplay: Boolean get() = DeviceUtils.isTablet(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

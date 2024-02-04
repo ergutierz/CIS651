@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.absoluteValue
 import com.example.cis651syracuse.project2.model.Movie
 import com.example.cis651syracuse.project2.view.components.MovieCard
-import com.example.cis651syracuse.project2.viewmodel.MovieListViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
