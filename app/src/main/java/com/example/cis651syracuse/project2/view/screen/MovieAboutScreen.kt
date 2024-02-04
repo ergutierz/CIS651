@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.Typography
@@ -14,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cis651syracuse.R
+import com.example.cis651syracuse.core.DeviceUtils
+import com.example.cis651syracuse.project2.view.components.ThemedSeparator
 
 @Composable
 fun MovieAboutScreen(modifier: Modifier = Modifier) {
@@ -46,11 +48,6 @@ fun MovieAboutScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ThemedSeparator() {
-    Divider(color = Color.DarkGray, thickness = 2.dp)
-}
-
-@Composable
 fun ThemedIcon(painter: Painter, contentDescription: String?) {
     Image(
         painter = painter,
@@ -58,6 +55,6 @@ fun ThemedIcon(painter: Painter, contentDescription: String?) {
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(550.dp.takeIf { DeviceUtils.isTablet(LocalContext.current) } ?: 200.dp)
     )
 }
