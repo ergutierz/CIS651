@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.cis651syracuse.project2.util.DeviceUtils
 import com.example.cis651syracuse.project2.view.components.ErrorScreen
 import com.example.cis651syracuse.project2.view.components.LoadingBar
 import com.example.cis651syracuse.project2.view.screen.MovieDetailScreen
@@ -22,6 +23,9 @@ class DetailFragment : Fragment() {
         ViewModelProvider(this)[MovieDetailViewModel::class.java]
     }
 
+    private val isMasterDetail: Boolean by lazy { DeviceUtils.isTablet(requireContext()) }
+    private var isInitialLoad = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,11 +36,18 @@ class DetailFragment : Fragment() {
                 val viewState: MovieDetailViewModel.ViewState by viewModel.viewState.collectAsState()
                 when {
                     viewState.isLoading -> LoadingBar()
-                    viewState.displayError -> ErrorScreen()
+                    viewState.displayError -> ErrorScreen(getInitialLoadMessage())
                     viewState.displayDetail -> MovieDetailScreen(movieDetail = viewState.movieDetail)
                 }
             }
         }
+    }
+
+    private fun getInitialLoadMessage(): String? {
+        return if (isInitialLoad && isMasterDetail) {
+            isInitialLoad = false
+            "Select a movie to see details"
+        } else null
     }
 
     override fun onResume() {

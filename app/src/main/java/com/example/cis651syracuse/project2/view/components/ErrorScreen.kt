@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.cis651syracuse.R
 
 @Composable
-fun ErrorScreen() {
+fun ErrorScreen(message: String? = null) {
     val typography = Typography(
         h4 = TextStyle(
             fontFamily = FontFamily.Serif,
@@ -57,7 +57,7 @@ fun ErrorScreen() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Something went wrong.\nPlease try again later.",
+            text = message ?: "Something went wrong.\nPlease try again later.",
             style = typography.body1,
             textAlign = TextAlign.Center,
             modifier = Modifier.align(Alignment.CenterHorizontally)

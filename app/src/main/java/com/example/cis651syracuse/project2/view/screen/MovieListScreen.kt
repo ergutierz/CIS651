@@ -1,6 +1,5 @@
 package com.example.cis651syracuse.project2.view.screen
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +24,6 @@ fun MovieListScreen(
                 RecyclerView(context).apply {
                     layoutManager = LinearLayoutManager(context)
                     adapter = MovieListAdapter(movies, onAction)
-                    setAdapter(adapter)
                 }
             })
     }

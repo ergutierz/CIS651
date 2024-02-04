@@ -38,8 +38,7 @@ fun LeftOrientedAdaptiveMovieCard(
             .clickable { onAction(MovieListViewModel.Action.DisplayMovieDetail(movie.id ?: -1)) },
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp),
-        backgroundColor = Color.Black,
-        border = BorderStroke(1.dp, Color(0xFFFFD700))
+        backgroundColor = Color.Black
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
             movie.posterPath?.let { path ->

@@ -7,5 +7,5 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ThemedSeparator() {
-    Divider(color = Color(0xFFFFD700), thickness = 1.dp)
+    Divider(color = Color(0xFFFFD700), thickness = 0.5.dp)
 }
