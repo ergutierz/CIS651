@@ -49,7 +49,7 @@ fun ErrorScreen(message: String? = null) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Oops!",
+            text = "Oops!".takeIf { message.isNullOrEmpty() } ?: "",
             style = typography.h4,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )

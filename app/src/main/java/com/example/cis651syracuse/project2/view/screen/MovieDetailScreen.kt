@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +29,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cis651syracuse.BuildConfig
+import com.example.cis651syracuse.core.DeviceUtils
 import com.example.cis651syracuse.project2.model.MovieDetailResponse
 import com.example.cis651syracuse.project2.view.components.ErrorScreen
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +39,14 @@ fun MovieDetailScreen(
     modifier: Modifier = Modifier,
     movieDetail: MovieDetailResponse?
 ) {
+    val isLandscape = DeviceUtils.isLandscape(LocalContext.current)
+    val (imageModifier, contentScale) = if (isLandscape) {
+        Pair(Modifier
+            .fillMaxWidth()
+            .aspectRatio(16f / 9f), ContentScale.Fit)
+    } else {
+        Pair(Modifier.fillMaxWidth(), ContentScale.Crop)
+    }
     val typography = Typography(
         h4 = TextStyle(fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold, fontSize = 28.sp, color = Color(0xFFFFD700)),
         body1 = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White),
@@ -63,9 +73,8 @@ fun MovieDetailScreen(
                         .memoryCachePolicy(CachePolicy.ENABLED)
                         .build(),
                     contentDescription = "${movieDetail.title} poster",
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentScale = ContentScale.Crop
+                    modifier = imageModifier, // This is the modifier with aspectRatio for landscape mode
+                    contentScale = contentScale // Adjusting the content scale to fit the image
                 )
             }
 

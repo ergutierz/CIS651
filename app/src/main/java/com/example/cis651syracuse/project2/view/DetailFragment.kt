@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.cis651syracuse.project2.util.DeviceUtils
+import com.example.cis651syracuse.core.DeviceUtils
 import com.example.cis651syracuse.project2.view.components.ErrorScreen
 import com.example.cis651syracuse.project2.view.components.LoadingBar
 import com.example.cis651syracuse.project2.view.screen.MovieDetailScreen

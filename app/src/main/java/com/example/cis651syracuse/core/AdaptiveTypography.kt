@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.project2.util
+package com.example.cis651syracuse.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color

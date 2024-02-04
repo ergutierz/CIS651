@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cis651syracuse.BuildConfig
 import com.example.cis651syracuse.project2.model.MovieDetailResponse
-import com.example.cis651syracuse.project2.util.adaptiveTypography
+import com.example.cis651syracuse.core.adaptiveTypography
 
 @Composable
 fun AdaptiveMovieDetailScreen(
