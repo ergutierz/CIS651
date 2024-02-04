@@ -34,7 +34,7 @@ class MovieListDetailActivity : AppCompatActivity() {
             when {
                 isLargeDisplay -> DisplayMasterDetail()
                 viewState.isDetailVisible -> DisplayDetail()
-                else -> DisplayList()
+                viewState.isListVisible -> DisplayList()
             }
         }
     }

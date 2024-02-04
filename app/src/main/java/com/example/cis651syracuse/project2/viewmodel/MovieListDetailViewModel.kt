@@ -16,9 +16,9 @@ class MovieListDetailViewModel @Inject constructor(
 ) : ViewModel(){
 
     val viewState: StateFlow<ViewState> get() = moviesRepository.isDetailVisible
-        .transform { isDetailVisible -> emit(ViewState(isDetailVisible)) }.stateIn(
+        .transform { isDetailVisible -> emit(ViewState(isDetailVisible, !isDetailVisible)) }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.Eagerly,
         initialValue = ViewState()
     )
 
@@ -33,7 +33,8 @@ class MovieListDetailViewModel @Inject constructor(
     }
 
     data class ViewState(
-        val isDetailVisible: Boolean = false
+        val isDetailVisible: Boolean = false,
+        val isListVisible: Boolean = false
     )
 
     sealed interface Action {
