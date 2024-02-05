@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +50,7 @@ fun ErrorScreen(message: String? = null) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Oops!".takeIf { message.isNullOrEmpty() } ?: "",
+            text = stringResource(id = R.string.oops).takeIf { message.isNullOrEmpty() }.orEmpty(),
             style = typography.h4,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
@@ -57,12 +58,14 @@ fun ErrorScreen(message: String? = null) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = message ?: "Something went wrong.\nPlease try again later.",
+            text = message ?: stringResource(id = R.string.something_went_wrong_nplease_t),
             style = typography.body1,
             textAlign = TextAlign.Center,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        Image(painter = painterResource(id = R.drawable.movie_light), contentDescription = "lights")
+        Image(painter = painterResource(id = R.drawable.movie_light), contentDescription = stringResource(
+            id = R.string.lights
+        ))
     }
 }

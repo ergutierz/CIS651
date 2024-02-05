@@ -9,7 +9,9 @@ import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.cis651syracuse.R
 import com.example.cis651syracuse.project2.model.Movie
 import com.example.cis651syracuse.project2.view.PageFragment
 import com.example.cis651syracuse.project2.view.components.PagerFragmentHost
@@ -22,7 +24,7 @@ fun MoviesViewPagerScreen(
 ) {
     val pagerState = rememberPagerState(pageCount = { movies.size })
     val coroutineScope = rememberCoroutineScope()
-    val tabs = movies.map { it.title ?: "Untitled" }
+    val tabs = movies.map { it.title ?: stringResource(id = R.string.untitled) }
 
     Column {
         ScrollableTabRow(

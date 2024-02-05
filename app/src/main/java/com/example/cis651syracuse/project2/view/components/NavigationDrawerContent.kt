@@ -18,11 +18,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cis651syracuse.R
 import com.example.cis651syracuse.project2.util.Screen
 import kotlinx.coroutines.launch
 
@@ -53,7 +55,7 @@ fun NavigationDrawerContent(
                 .padding(end = 1.dp)
         ) {
             Column {
-                Text(text = "Cinema Chronicles", style = typography.h5)
+                Text(text = stringResource(id = R.string.cinema_chronicles), style = typography.h5)
                 ThemedSeparator()
                 DrawerItem(Screen.Dashboard, scaffoldState, onNavItemClick, typography)
                 DrawerItem(Screen.Movies, scaffoldState, onNavItemClick, typography)
@@ -80,7 +82,7 @@ fun DrawerItem(
 ) {
     val coroutineScope = rememberCoroutineScope()
     ListItem(
-        text = { Text(screen.title, style = typography.body1) },
+        text = { Text(stringResource(id = screen.title), style = typography.body1) },
         modifier = Modifier.clickable {
             onNavItemClick(screen)
             coroutineScope.launch {

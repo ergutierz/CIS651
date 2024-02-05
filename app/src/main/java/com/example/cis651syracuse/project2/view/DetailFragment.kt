@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.cis651syracuse.R
 import com.example.cis651syracuse.core.DeviceUtils
 import com.example.cis651syracuse.project2.view.components.ErrorScreen
 import com.example.cis651syracuse.project2.view.components.LoadingBar
@@ -46,7 +47,7 @@ class DetailFragment : Fragment() {
     private fun getInitialLoadMessage(): String? {
         return if (isInitialLoad && isMasterDetail) {
             isInitialLoad = false
-            "Select a movie to see details"
+            getString(R.string.select_a_movie_to_see_details)
         } else null
     }
 

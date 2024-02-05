@@ -4,7 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
+import com.example.cis651syracuse.R
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.centerAlignedTopAppBarColors
@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import com.example.cis651syracuse.project2.util.Screen
 import kotlinx.coroutines.launch
 
@@ -26,8 +27,8 @@ fun TopNavBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = screen.title,
-                style = MaterialTheme.typography.headlineMedium.copy(color = Color(0xFFFFD700)), // Updated for cinema theme
+                text = stringResource(id = screen.title),
+                style = MaterialTheme.typography.headlineMedium.copy(color = Color(0xFFFFD700)),
             )
         },
         navigationIcon = {
@@ -40,7 +41,7 @@ fun TopNavBar(
                     }
                 },
                 imageVector = if (screen.isDashboard) Icons.Filled.Menu else Icons.Filled.ArrowBack,
-                contentDescription = if (screen.isDashboard) "Menu" else "Close",
+                contentDescription = stringResource(id = R.string.menu.takeIf { screen.isDashboard } ?: R.string.close),
                 tint = Color(0xFFFFD700)
             )
         },
