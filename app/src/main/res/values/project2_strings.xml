@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<resources>
+    <string name="failed_to_load_movie_detail">Failed to load movie detail</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="yyyy_mm_dd_hh_mm">yyyy-MM-dd HH:mm</string>
+    <string name="dive_into_the_heart_of_storyte">Dive into the heart of storytelling with Cinema Chronicles, your ultimate portal to the magic of movies. Born from a deep-seated passion for cinematic adventures and the art of filmmaking, this project is a tribute to the timeless allure of the silver screen.</string>
+    <string name="release_date_moviedetail_relea">Release date: %s</string>
+    <string name="welcome_to_cinema_chronicles">Welcome to Cinema Chronicles</string>
+    <string name="select_a_movie_to_see_details">Select a movie to see details</string>
+    <string name="movie_title_poster">%s poster</string>
+    <string name="untitled">Untitled</string>
+    <string name="lights">lights</string>
+    <string name="about">About</string>
+    <string name="movies">Movies</string>
+    <string name="menu">Menu</string>
+    <string name="close">Close</string>
+    <string name="authentication_token_new">authentication/token/new</string>
+    <string name="movie_carousel">Movie Carousel</string>
+    <string name="overview_moviedetail_overview">Overview: %s</string>
+    <string name="runtime_moviedetail_runtime_mi">Runtime: %s minutes</string>
+    <string name="failed_to_authenticate">Failed to authenticate</string>
+    <string name="something_went_wrong_nplease_t">Something went wrong.\nPlease try again later.</string>
+    <string name="genres_genres_jointostring_it_">Genres: %s</string>
+    <string name="authentication_successful">Authentication successful</string>
+    <string name="cinema_chronicles">Cinema Chronicles</string>
+    <string name="moviedetail_title_poster">%s poster</string>
+    <string name="failed_to_load_movies">Failed to load movies</string>
+    <string name="oops">Oops!</string>
+    <string name="created_by_erik_a_software_eng">Created by Erik, a software engineer with a flair for storytelling and a programmer\'s precision, Cinema Chronicles bridges the gap between technology and the art of cinema. This project is a personal journey through the reels of history, inviting you to join in the exploration of stories that shape our world.</string>
+    <string name="profile_banner">Profile Banner</string>
+    <string name="movie_detail">Movie Detail</string>
+    <string name="authentication_failed_with_mes">Authentication failed with message: %s</string>
+    <string name="com_example_cis651syracuse">com.example.cis651syracuse</string>
+    <string name="the_vision">The Vision</string>
+</resources>
