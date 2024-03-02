@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.project3
+package com.example.cis651syracuse.project3.view
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.cis651syracuse.project3.viewmodel.DashboardViewModel
 
 @Composable
 fun DashboardScreen() {

@@ -1,7 +1,8 @@
-package com.example.cis651syracuse.project3
+package com.example.cis651syracuse.project3.util
 
 import androidx.navigation.NamedNavArgument
 import com.example.cis651syracuse.core.ApplicationScope
+import com.example.cis651syracuse.project3.view.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

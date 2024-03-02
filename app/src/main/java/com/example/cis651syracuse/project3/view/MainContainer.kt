@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.project3
+package com.example.cis651syracuse.project3.view
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -16,6 +16,12 @@ fun MainContainer(modifier: Modifier = Modifier, navController: NavHostControlle
         scaffoldState = scaffoldState,
         topBar = {
             TopNavBar(
+                navController = navController,
+                scaffoldState = scaffoldState
+            )
+        },
+        drawerContent = {
+            NavDrawer(
                 navController = navController,
                 scaffoldState = scaffoldState
             )

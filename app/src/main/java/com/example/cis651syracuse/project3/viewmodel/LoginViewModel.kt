@@ -1,10 +1,12 @@
-package com.example.cis651syracuse.project3
+package com.example.cis651syracuse.project3.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cis651syracuse.core.ConsumableEvent
 import com.example.cis651syracuse.core.ModelStore
 import com.example.cis651syracuse.core.StateFlowModelStore
+import com.example.cis651syracuse.project3.repository.AuthenticationRepository
+import com.example.cis651syracuse.project3.util.NavigationCommandManager
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

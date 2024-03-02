@@ -1,4 +1,4 @@
-package com.example.cis651syracuse.project3
+package com.example.cis651syracuse.project3.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +23,7 @@ import com.example.cis651syracuse.core.handleEvent
 import com.example.cis651syracuse.core.ErrorDialog
 import com.example.cis651syracuse.core.InputField
 import com.example.cis651syracuse.core.LoadingBar
+import com.example.cis651syracuse.project3.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen() {

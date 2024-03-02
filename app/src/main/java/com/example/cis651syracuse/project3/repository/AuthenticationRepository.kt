@@ -1,5 +1,6 @@
-package com.example.cis651syracuse.project3
+package com.example.cis651syracuse.project3.repository
 
+import com.example.cis651syracuse.project3.util.FirebaseAuthenticationManager
 import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 import javax.inject.Singleton
