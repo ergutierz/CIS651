@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "649473323074",
+    "project_id": "cis651-project3-38c4e",
+    "storage_bucket": "cis651-project3-38c4e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649473323074:android:141d911c1f975580023ddb",
+        "android_client_info": {
+          "package_name": "com.example.cis651syracuse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaSMb9y6EzXalSjybfQUaABcbBporsEWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

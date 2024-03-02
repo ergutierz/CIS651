@@ -17,13 +17,7 @@
         android:theme="@style/Theme.CIS651Syracuse"
         tools:targetApi="31">
         <activity
-            android:name=".project2.view.MovieViewPagerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".project2.view.MovieListDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".project2.view.MovieAboutActivity"
+            android:name=".project3.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,13 +26,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".project2.view.MovieViewPagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".project2.view.MovieListDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".project2.view.MovieAboutActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".project1.model.view.GameScoreActivity"
@@ -49,11 +44,6 @@
         <activity
             android:name=".project1.model.view.GameSelectionActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
