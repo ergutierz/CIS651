@@ -70,7 +70,11 @@ class UserProfileViewModel @Inject constructor(
                 _modelStore.process { oldState ->
                     setLoadingState(false)
                     if (isSuccess && user != null) {
-                        oldState.copy(user = user)
+                        oldState.copy(
+                            user = user,
+                            displayName = user.displayName,
+                            phoneNumber = user.phoneNumber,
+                        )
                     } else {
                         oldState.copy(
                             consumableEvent = ConsumableEvent.create(Event.Error("Unable to update user profile.")),
@@ -89,7 +93,7 @@ class UserProfileViewModel @Inject constructor(
             "phoneNumber" to _modelStore.value.phoneNumber.orEmpty()
         )
         setLoadingState(true)
-        userManager.updateUser(userId, updates) { isSuccess ->
+        userManager.updateUserProfile(userId, updates) { isSuccess ->
             setLoadingState(false)
             viewModelScope.launch {
                 _modelStore.process { oldState ->

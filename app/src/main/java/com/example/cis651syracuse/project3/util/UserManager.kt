@@ -8,7 +8,8 @@ import javax.inject.Singleton
 
 @Singleton
 class UserManager @Inject constructor(
-    private val fireStore: FirebaseFirestore
+    private val fireStore: FirebaseFirestore,
+    private val firebaseAuthenticationManager: FirebaseAuthenticationManager
 ) {
 
     fun createUser(user: User, onComplete: (isSuccess: Boolean) -> Unit) {
@@ -40,17 +41,37 @@ class UserManager @Inject constructor(
             }
     }
 
-    fun updateUser(userId: String, updates: Map<String, Any>, onComplete: (isSuccess: Boolean) -> Unit) {
-        fireStore.collection("users").document(userId).update(updates)
-            .addOnSuccessListener {
-                onComplete(true)
-                Log.d("UserManager", "User successfully updated!")
+    fun updateUserProfile(userId: String, updates: Map<String, Any>, onComplete: (isSuccess: Boolean) -> Unit) {
+        val docRef = fireStore.collection("users").document(userId)
+        docRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                docRef.update(updates)
+                    .addOnSuccessListener { onComplete(true) }
+                    .addOnFailureListener { e ->
+                        Log.w("UserManager", "Error updating user", e)
+                        onComplete(false)
+                    }
+            } else {
+                val newUserUpdates = updates.toMutableMap().apply {
+                    this["userId"] = userId
+                    this["email"] = firebaseAuthenticationManager.getCurrentUser?.email.orEmpty()
+                }
+                docRef.set(newUserUpdates)
+                    .addOnSuccessListener {
+                        Log.d("UserManager", "User document created successfully")
+                        onComplete(true)
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("UserManager", "Error creating user document", e)
+                        onComplete(false)
+                    }
             }
-            .addOnFailureListener { e ->
-                onComplete(false)
-                Log.w("UserManager", "Error updating user", e)
-            }
+        }.addOnFailureListener { e ->
+            Log.w("UserManager", "Error checking user document", e)
+            onComplete(false)
+        }
     }
+
 
     fun deleteUser(userId: String, onComplete: (isSuccess: Boolean) -> Unit) {
         fireStore.collection("users").document(userId).delete()

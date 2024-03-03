@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cis651syracuse.core.ErrorDialog
-import com.example.cis651syracuse.core.InputField
+import com.example.cis651syracuse.core.InputFieldPrePopulated
 import com.example.cis651syracuse.core.LoadingBar
 import com.example.cis651syracuse.core.SuccessDialog
 import com.example.cis651syracuse.project3.viewmodel.UserProfileViewModel
@@ -21,7 +21,7 @@ fun UserProfileScreen() {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "User Profile", style = MaterialTheme.typography.h5)
         Spacer(modifier = Modifier.height(16.dp))
-        InputField(
+        InputFieldPrePopulated(
             initialValue = viewState.displayName.orEmpty(),
             onValueChange = {
                 viewModel.onAction(UserProfileViewModel.Action.UpdateDisplayName(it))
@@ -30,7 +30,7 @@ fun UserProfileScreen() {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        InputField(
+        InputFieldPrePopulated(
             initialValue = viewState.phoneNumber.orEmpty(),
             onValueChange = {
                 viewModel.onAction(UserProfileViewModel.Action.UpdatePhoneNumber(it))
@@ -47,10 +47,9 @@ fun UserProfileScreen() {
         ) {
             Text("Update Profile")
         }
-
-        ConsumeEvent(viewState)
-        if (viewState.isLoading) LoadingBar()
     }
+    ConsumeEvent(viewState)
+    if (viewState.isLoading) LoadingBar()
 }
 
 @Composable

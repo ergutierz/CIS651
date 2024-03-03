@@ -17,18 +17,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun InputField(
+fun InputFieldPrePopulated(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    initialValue: String = ""
 ) {
-    val text = remember { mutableStateOf("") }
     val isPasswordVisible = remember { mutableStateOf(false) }
     OutlinedTextField(
-        value = text.value,
+        value = initialValue,
         onValueChange = {
-            text.value = it
             onValueChange(it)
         },
         label = { Text(label) },
