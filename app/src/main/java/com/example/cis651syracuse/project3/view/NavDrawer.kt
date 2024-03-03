@@ -28,6 +28,7 @@ fun NavDrawer(
         DrawerItem("User Profile", Screen.UserProfileScreen.route, navController, scaffoldState)
         DrawerItem("Create Post", Screen.PostCreationScreen.route, navController, scaffoldState)
         DrawerItem("Feed", Screen.PostFeedScreen.route, navController, scaffoldState)
+        DrawerItem("Sign Out", Screen.LoginScreen.route, navController, scaffoldState)
     }
 }
 

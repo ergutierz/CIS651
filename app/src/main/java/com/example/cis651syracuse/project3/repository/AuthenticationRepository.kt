@@ -25,4 +25,12 @@ class AuthenticationRepository @Inject constructor(
             onComplete(null, e)
         }
     }
+
+    fun sendPasswordReset(email: String, onComplete: (Exception?) -> Unit) {
+        try {
+            firebaseAuthenticationManager.sendPasswordReset(email, onComplete)
+        } catch (e: Exception) {
+            onComplete(e)
+        }
+    }
 }

@@ -62,7 +62,9 @@ fun LoginScreen() {
             Text("Submit")
         }
 
-        TextButton(onClick = { /* Handle forgot password */ }) {
+        TextButton(onClick = {
+            viewModel.onAction(LoginViewModel.Action.ForgotPassword)
+        }) {
             Text("Forgot Password?")
         }
 

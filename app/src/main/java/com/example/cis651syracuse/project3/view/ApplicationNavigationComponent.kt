@@ -21,6 +21,7 @@ fun ApplicationNavigationComponent(
     ) {
         composable(Screen.LoginScreen.route) { LoginScreen() }
         composable(Screen.DashboardScreen.route) { DashboardScreen() }
+        composable(Screen.ForgotPasswordScreen.route) { ForgotPasswordScreen() }
         composable(Screen.PostCreationScreen.route) { PostCreationScreen() }
         composable(Screen.PostFeedScreen.route) { PostFeedScreen() }
         composable(Screen.RegisterScreen.route) { RegisterScreen() }
