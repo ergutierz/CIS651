@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val authRepository: AuthenticationRepository,
     private val navigationCommandManager: NavigationCommandManager,
 ) : ViewModel() {
@@ -32,10 +32,10 @@ class LoginViewModel @Inject constructor(
 
     fun onAction(action: Action) {
         when (action) {
-            is Action.Login -> performLogin()
+            is Action.Register -> performRegistration()
             is Action.UpdateEmail -> updateEmail(action.email)
             is Action.UpdatePassword -> updatePassword(action.password)
-            is Action.NavigateToRegister -> navigateToRegister()
+            is Action.NavigateToLogin -> navigateToLogin()
         }
     }
 
@@ -61,15 +61,11 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToRegister() {
-        navigationCommandManager.navigate(NavigationCommandManager.registerDirection)
-    }
-
-    private fun performLogin() {
+    private fun performRegistration() {
         setLoadingState(true)
         val email = _modelStore.value.email
         val password = _modelStore.value.password
-        authRepository.login(email, password) { firebaseUser: FirebaseUser?, exception: Exception? ->
+        authRepository.register(email, password) { firebaseUser: FirebaseUser?, exception: Exception? ->
             if (exception == null && firebaseUser != null) {
                 navigateToDashboard()
             } else {
@@ -85,6 +81,10 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun navigateToLogin() {
+        navigationCommandManager.navigate(NavigationCommandManager.loginDirection)
     }
 
     private fun navigateToDashboard() {
@@ -108,8 +108,8 @@ class LoginViewModel @Inject constructor(
     sealed interface Action {
         data class UpdateEmail(val email: String) : Action
         data class UpdatePassword(val password: String) : Action
-        data object NavigateToRegister : Action
-        data object Login : Action
+        data object NavigateToLogin : Action
+        data object Register : Action
     }
 
     sealed interface Event {

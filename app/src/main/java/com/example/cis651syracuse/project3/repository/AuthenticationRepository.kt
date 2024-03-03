@@ -11,10 +11,18 @@ class AuthenticationRepository @Inject constructor(
 ) {
 
     fun login(email: String, password: String, onComplete: (FirebaseUser?, Exception?) -> Unit) {
-        firebaseAuthenticationManager.signIn(email, password, onComplete)
+        try {
+            firebaseAuthenticationManager.signIn(email, password, onComplete)
+        } catch (e: Exception) {
+            onComplete(null, e)
+        }
     }
 
     fun register(email: String, password: String, onComplete: (FirebaseUser?, Exception?) -> Unit) {
-        firebaseAuthenticationManager.signUp(email, password, onComplete)
+        try {
+            firebaseAuthenticationManager.signUp(email, password, onComplete)
+        } catch (e: Exception) {
+            onComplete(null, e)
+        }
     }
 }

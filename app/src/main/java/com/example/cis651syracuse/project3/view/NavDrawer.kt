@@ -25,8 +25,6 @@ fun NavDrawer(
     Column(modifier = modifier) {
         Text(text = "Poster APP", style = MaterialTheme.typography.h5, modifier = Modifier.padding(16.dp))
         Divider()
-        DrawerItem("Login", Screen.LoginScreen.route, navController, scaffoldState)
-        DrawerItem("Register", Screen.RegisterScreen.route, navController, scaffoldState)
         DrawerItem("User Profile", Screen.UserProfileScreen.route, navController, scaffoldState)
         DrawerItem("Create Post", Screen.PostCreationScreen.route, navController, scaffoldState)
         DrawerItem("Feed", Screen.PostFeedScreen.route, navController, scaffoldState)
