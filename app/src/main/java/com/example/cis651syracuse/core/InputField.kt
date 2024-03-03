@@ -21,9 +21,10 @@ fun InputField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    initialValue: String? = null
 ) {
-    val text = remember { mutableStateOf("") }
+    val text = remember { mutableStateOf(initialValue.orEmpty()) }
     val isPasswordVisible = remember { mutableStateOf(false) }
     OutlinedTextField(
         value = text.value,

@@ -31,7 +31,39 @@ class UserProfileViewModel @Inject constructor(
             initialValue = ViewState()
         )
 
-    fun fetchUserProfile(userId: String) {
+    init {
+        fetchUserProfile()
+    }
+
+    fun onAction(action: Action) {
+        when (action) {
+            is Action.UpdateUserProfile -> updateUserProfile()
+            is Action.UpdateEmail -> updateEmail(action.email)
+            is Action.UpdateDisplayName -> updateDisplayName(action.displayName)
+            is Action.UpdatePhoneNumber -> updatePhoneNumber(action.phoneNumber)
+        }
+    }
+
+    private fun updateEmail(email: String) {
+        viewModelScope.launch {
+            _modelStore.process { oldState -> oldState.copy(email = email) }
+        }
+    }
+
+    private fun updateDisplayName(displayName: String) {
+        viewModelScope.launch {
+            _modelStore.process { oldState -> oldState.copy(displayName = displayName) }
+        }
+    }
+
+    private fun updatePhoneNumber(phoneNumber: String) {
+        viewModelScope.launch {
+            _modelStore.process { oldState -> oldState.copy(phoneNumber = phoneNumber) }
+        }
+    }
+
+    private fun fetchUserProfile() {
+        val userId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
         setLoadingState(true)
         userManager.getUser(userId) { isSuccess, user ->
             viewModelScope.launch {
@@ -41,7 +73,7 @@ class UserProfileViewModel @Inject constructor(
                         oldState.copy(user = user)
                     } else {
                         oldState.copy(
-                            event = ConsumableEvent.create(Event.Error("Unable to update user profile.")),
+                            consumableEvent = ConsumableEvent.create(Event.Error("Unable to update user profile.")),
                         )
                     }
                 }
@@ -49,19 +81,24 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateUserProfile(userId: String, updates: Map<String, Any>) {
+    private fun updateUserProfile() {
+        val userId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
+        val updates = mapOf(
+            "email" to _modelStore.value.email.orEmpty(),
+            "displayName" to _modelStore.value.displayName.orEmpty(),
+            "phoneNumber" to _modelStore.value.phoneNumber.orEmpty()
+        )
         setLoadingState(true)
         userManager.updateUser(userId, updates) { isSuccess ->
             setLoadingState(false)
             viewModelScope.launch {
                 _modelStore.process { oldState ->
-                    if (isSuccess) {
-                        oldState.copy(updateSuccess = true)
-                    } else {
-                        oldState.copy(
-                            event = ConsumableEvent.create(Event.Error("Unable to update user profile.")),
+                    oldState.copy(
+                        consumableEvent = ConsumableEvent.create(
+                            Event.Success("Profile updated successfully").takeIf { isSuccess } ?:
+                            Event.Error("Unable to update user profile.")
                         )
-                    }
+                    )
                 }
             }
         }
@@ -75,13 +112,22 @@ class UserProfileViewModel @Inject constructor(
 
     data class ViewState(
         val user: User? = null,
+        val email: String? = null,
+        val displayName: String? = null,
+        val phoneNumber: String? = null,
         val isLoading: Boolean = false,
-        val updateSuccess: Boolean? = null,
-        val event: ConsumableEvent<Event> = ConsumableEvent()
+        val consumableEvent: ConsumableEvent<Event> = ConsumableEvent()
     )
+
+    sealed interface Action {
+        data object UpdateUserProfile : Action
+        data class UpdateEmail(val email: String) : Action
+        data class UpdateDisplayName(val displayName: String) : Action
+        data class UpdatePhoneNumber(val phoneNumber: String) : Action
+    }
 
     sealed interface Event {
         data class Error(val message: String) : Event
-        // Define navigation events if needed
+        data class Success(val message: String) : Event
     }
 }
