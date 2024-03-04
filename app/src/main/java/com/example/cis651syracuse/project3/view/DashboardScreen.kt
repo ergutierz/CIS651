@@ -1,113 +1,86 @@
 package com.example.cis651syracuse.project3.view
 
-import android.app.Activity
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import com.example.cis651syracuse.project3.model.Post
 import com.example.cis651syracuse.project3.viewmodel.DashboardViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun DashboardScreen() {
     val viewModel: DashboardViewModel = hiltViewModel()
-    var progress by remember { mutableStateOf(50) } // Example progress state
-    val context = LocalContext.current
-    BackHandler {
-        (context as? Activity)?.finish()
-    }
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
-        Text(
-            text = "Dashboard",
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.align(Alignment.Start)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+    val posts by viewModel.posts.collectAsState()
 
-        // Progress Overview
-        LinearProgressIndicator(
-            progress = progress / 100f,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = "Overall Progress: $progress%",
-            style = MaterialTheme.typography.subtitle1,
-            modifier = Modifier.align(Alignment.End)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Quick Access to Main Features
-        LazyRow {
-            item {
-                QuickAccessItem(
-                    "Speech Recognition",
-                    onClick = { /* Navigate to Speech Recognition */ })
-                QuickAccessItem(
-                    "Vocabulary Exercises",
-                    onClick = { /* Navigate to Vocabulary Exercises */ })
-                QuickAccessItem("Grammar Tips", onClick = { /* Navigate to Grammar Tips */ })
-                // Add more items as needed
-            }
-        }
-
-        // Recommended Lessons or Activities
-        Text(
-            text = "Recommended for You",
-            style = MaterialTheme.typography.h6
-        )
-        LazyRow {
-            item {
-                // Populate with dynamic content
-                RecommendedItem("Lesson 1")
-                RecommendedItem("Activity 2")
-                // Add more items based on user progress or preferences
-            }
+    LazyColumn {
+        items(posts) { post ->
+            PostItem(post = post)
         }
     }
 }
 
 @Composable
-fun QuickAccessItem(title: String, onClick: () -> Unit) {
+fun PostItem(post: Post) {
     Card(
         modifier = Modifier
-            .width(150.dp)
-            .height(100.dp)
+            .fillMaxWidth()
             .padding(8.dp),
         elevation = 4.dp
     ) {
-        Column(
-            modifier = Modifier
-                .clickable(onClick = onClick)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = title, style = MaterialTheme.typography.subtitle1)
+        Column(modifier = Modifier.padding(8.dp)) {
+            Row {
+                post.imageUrl?.let { imageUrl ->
+                    Image(
+                        painter = rememberAsyncImagePainter(imageUrl),
+                        contentDescription = "Post Image",
+                        modifier = Modifier
+                            .size(150.dp)
+                            .padding(4.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = post.description,
+                        style = MaterialTheme.typography.body1
+                    )
+                    Text(
+                        text = "Likes: ${post.likeCount}",
+                        style = MaterialTheme.typography.body2
+                    )
+                    Text(
+                        text = "Posted on: ${formatDate(post.timestamp)}",
+                        style = MaterialTheme.typography.body2
+                    )
+                }
+            }
         }
     }
 }
 
-@Composable
-fun RecommendedItem(title: String) {
-    Card(
-        modifier = Modifier
-            .width(200.dp)
-            .height(120.dp)
-            .padding(8.dp),
-        elevation = 4.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = title, style = MaterialTheme.typography.subtitle1)
-        }
-    }
+private fun formatDate(date: Date): String {
+    val formatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+    return formatter.format(date)
 }
+

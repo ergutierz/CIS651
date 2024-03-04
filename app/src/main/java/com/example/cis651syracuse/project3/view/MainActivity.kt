@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.example.cis651syracuse.project3.repository.AuthenticationRepository
 import com.example.cis651syracuse.project3.util.NavigationCommandManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -18,6 +19,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var navigationCommandManager: NavigationCommandManager
+
+    @Inject
+    lateinit var authenticationRepository: AuthenticationRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,5 +40,10 @@ class MainActivity : AppCompatActivity() {
                 }.launchIn(this)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        authenticationRepository.signOut()
     }
 }

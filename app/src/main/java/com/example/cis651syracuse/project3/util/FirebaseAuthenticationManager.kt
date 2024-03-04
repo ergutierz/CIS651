@@ -42,5 +42,9 @@ class FirebaseAuthenticationManager @Inject constructor(
             }
     }
 
+    fun signOut() {
+        firebaseAuth.signOut()
+    }
+
     val getCurrentUser: FirebaseUser? get() = firebaseAuth.currentUser
 }

@@ -30,6 +30,10 @@ class LoginViewModel @Inject constructor(
             initialValue = ViewState()
         )
 
+    init {
+        authRepository.signOut()
+    }
+
     fun onAction(action: Action) {
         when (action) {
             is Action.Login -> performLogin()

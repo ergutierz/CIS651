@@ -69,8 +69,8 @@ class RegisterViewModel @Inject constructor(
         val password = _modelStore.value.password
         authRepository.register(email, password) { firebaseUser: FirebaseUser?, exception: Exception? ->
             if (exception == null && firebaseUser != null) {
-                val userId = authRepository.getCurrentUser?.uid.orEmpty()
-                val userEmail = authRepository.getCurrentUser?.email.orEmpty()
+                val userId = firebaseUser.uid
+                val userEmail = firebaseUser.email.orEmpty()
                 userManager.updateUserProfile(userId, mapOf("email" to userEmail)){}
                 navigateToDashboard()
             } else {
