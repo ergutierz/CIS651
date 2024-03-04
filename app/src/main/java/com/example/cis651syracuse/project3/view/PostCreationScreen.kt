@@ -171,7 +171,6 @@ fun PostPreviewCard(description: String, imageUri: Uri?) {
 
 
 private fun saveImageToTempFile(context: Context, bitmap: Bitmap): Uri {
-    // Create a temporary file
     val tempFile = File(context.cacheDir, "tempImage_${System.currentTimeMillis()}.jpg")
     try {
         tempFile.outputStream().use {
@@ -186,7 +185,7 @@ private fun saveImageToTempFile(context: Context, bitmap: Bitmap): Uri {
 
 @Composable
 private fun ConsumeEvent(viewState: PostCreationViewModel.ViewState) = with(viewState) {
-    viewState.consumableEvent.handleEvent { event ->
+    consumableEvent.handleEvent { event ->
         when (event) {
             is PostCreationViewModel.Event.PostCreationSuccess -> SuccessDialog()
             is PostCreationViewModel.Event.Error -> ErrorDialog()

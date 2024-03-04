@@ -6,6 +6,7 @@ import com.example.cis651syracuse.core.ConsumableEvent
 import com.example.cis651syracuse.core.ModelStore
 import com.example.cis651syracuse.core.StateFlowModelStore
 import com.example.cis651syracuse.project3.repository.AuthenticationRepository
+import com.example.cis651syracuse.project3.util.FirebaseAuthenticationManager
 import com.example.cis651syracuse.project3.util.NavigationCommandManager
 import com.example.cis651syracuse.project3.util.UserManager
 import com.google.firebase.auth.FirebaseUser
@@ -17,12 +18,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
+class NavDrawerViewModel @Inject constructor(
     private val userManager: UserManager,
     private val authRepository: AuthenticationRepository,
     private val navigationCommandManager: NavigationCommandManager,
+    private val firebaseAuthenticationManager: FirebaseAuthenticationManager
 ) : ViewModel() {
-
     private val _modelStore: ModelStore<ViewState> =
         StateFlowModelStore(ViewState(), viewModelScope)
     val viewState: StateFlow<ViewState>
@@ -32,12 +33,50 @@ class RegisterViewModel @Inject constructor(
             initialValue = ViewState()
         )
 
+    init {
+        fetchUserProfile()
+    }
+
     fun onAction(action: Action) {
         when (action) {
-            is Action.Register -> performRegistration()
+            is Action.Login -> performLogin()
             is Action.UpdateEmail -> updateEmail(action.email)
             is Action.UpdatePassword -> updatePassword(action.password)
-            is Action.NavigateToLogin -> navigateToLogin()
+            is Action.DisplayLoginDialog -> displayLoginDialog()
+            is Action.DismissLoginDialog -> dismissLoginDialog()
+        }
+    }
+
+    private fun fetchUserProfile() {
+        val userId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
+        userManager.getUser(userId) { _, user ->
+            viewModelScope.launch {
+                _modelStore.process { oldState ->
+                    oldState.copy(
+                        currentUserName = user?.displayName
+                    )
+                }
+            }
+        }
+    }
+
+    private fun dismissLoginDialog() {
+        viewModelScope.launch {
+            _modelStore.process { oldState ->
+                oldState.copy(
+                    isLoginDialogVisible = false
+                )
+            }
+        }
+    }
+
+    private fun displayLoginDialog() {
+        viewModelScope.launch {
+            _modelStore.process { oldState ->
+                oldState.copy(
+                    isLoginDialogVisible = true
+                )
+            }
         }
     }
 
@@ -63,21 +102,18 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun performRegistration() {
+    private fun performLogin() {
         setLoadingState(true)
         val email = _modelStore.value.email
         val password = _modelStore.value.password
-        authRepository.register(email, password) { firebaseUser: FirebaseUser?, exception: Exception? ->
+        authRepository.login(email, password) { firebaseUser: FirebaseUser?, exception: Exception? ->
+            setLoadingState(false)
             if (exception == null && firebaseUser != null) {
-                val userId = authRepository.getCurrentUser?.uid.orEmpty()
-                val userEmail = authRepository.getCurrentUser?.email.orEmpty()
-                userManager.updateUserProfile(userId, mapOf("email" to userEmail)){}
                 navigateToDashboard()
             } else {
                 viewModelScope.launch {
                     _modelStore.process { oldState ->
                         oldState.copy(
-                            isLoading = false,
                             consumableEvent = ConsumableEvent.create(
                                 Event.Error(exception?.message ?: "Unknown error")
                             )
@@ -86,10 +122,6 @@ class RegisterViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun navigateToLogin() {
-        navigationCommandManager.navigate(NavigationCommandManager.loginDirection)
     }
 
     private fun navigateToDashboard() {
@@ -107,14 +139,17 @@ class RegisterViewModel @Inject constructor(
         val email: String = "",
         val password: String = "",
         val isFormValid: Boolean = false,
+        val currentUserName: String? = null,
+        val isLoginDialogVisible: Boolean = false,
         val consumableEvent: ConsumableEvent<Event> = ConsumableEvent(),
     )
 
     sealed interface Action {
         data class UpdateEmail(val email: String) : Action
         data class UpdatePassword(val password: String) : Action
-        data object NavigateToLogin : Action
-        data object Register : Action
+        data object DisplayLoginDialog : Action
+        data object DismissLoginDialog : Action
+        data object Login : Action
     }
 
     sealed interface Event {
