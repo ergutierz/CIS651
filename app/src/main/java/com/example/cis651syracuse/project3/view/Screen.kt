@@ -7,7 +7,7 @@ sealed class Screen(val route: String) {
     data object DashboardScreen : Screen("dashboard_screen")
     data object UserProfileScreen : Screen("user_profile_screen")
     data object PostCreationScreen : Screen("post_creation_screen")
-    data object PostFeedScreen : Screen("post_feed_screen")
+    data object PostEditScreen : Screen("post_edit_screen")
     data object PostDetailScreen : Screen("post_detail_screen")
 
     companion object {
@@ -18,7 +18,7 @@ sealed class Screen(val route: String) {
                 ForgotPasswordScreen.route -> "Forgot Password"
                 UserProfileScreen.route -> "User Profile"
                 PostCreationScreen.route -> "Create Post"
-                PostFeedScreen.route -> "Feed"
+                PostEditScreen.route -> "Edit Post"
                 PostDetailScreen.route -> "Post Details"
                 else -> "Poster APP"
             }

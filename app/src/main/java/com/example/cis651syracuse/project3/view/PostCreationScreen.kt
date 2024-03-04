@@ -41,7 +41,6 @@ fun PostCreationScreen() {
     var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Launchers for picking image from gallery and capturing from camera
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -80,7 +79,6 @@ fun PostCreationScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Image preview
         imageUri?.let {
             Image(
                 painter = rememberAsyncImagePainter(it),
@@ -91,7 +89,6 @@ fun PostCreationScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Buttons for image selection
         Button(
             onClick = { pickImageLauncher.launch("image/*") },
             modifier = Modifier.fillMaxWidth()
@@ -116,12 +113,10 @@ fun PostCreationScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Preview of the Post Card
         PostPreviewCard(description, imageUri)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Submit button
         Button(
             onClick = {
                 viewModel.onAction(

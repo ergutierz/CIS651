@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.cis651syracuse.project3.model.Post
+import com.example.cis651syracuse.project3.util.NavigationCommandManager
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val postManager: PostManager
+    private val postManager: PostManager,
+    private val navigationCommandManager: NavigationCommandManager
 ) : ViewModel() {
 
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
@@ -32,6 +34,19 @@ class DashboardViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun deletePost(post: Post) {
+        postManager.deletePost(post.postId) { isSuccess ->
+            if (isSuccess) {
+                fetchPosts()
+            }
+        }
+    }
+
+    fun editPost(post: Post) {
+        postManager.setSelectedPostForEditing(post)
+        navigationCommandManager.navigate(NavigationCommandManager.editPostDirection)
     }
 }
 

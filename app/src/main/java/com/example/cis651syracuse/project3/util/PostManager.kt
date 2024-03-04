@@ -4,14 +4,25 @@ import android.util.Log
 import com.example.cis651syracuse.project3.model.Post
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PostManager @Inject constructor(
     private val fireStore: FirebaseFirestore,
-    private val storage: FirebaseStorage
+    private val storage: FirebaseStorage,
+    private val firebaseAuthenticationManager: FirebaseAuthenticationManager
 ) {
+
+    private val _selectedPostForEditing = MutableStateFlow<Post?>(null)
+    val selectedPostForEditing = _selectedPostForEditing.asStateFlow()
+
+    fun setSelectedPostForEditing(post: Post) {
+        _selectedPostForEditing.update { post }
+    }
 
     fun createPost(post: Post, onComplete: (isSuccess: Boolean) -> Unit) {
         fireStore.collection("posts").document(post.postId).set(post)
@@ -31,7 +42,9 @@ class PostManager @Inject constructor(
                 val posts = querySnapshot.documents.mapNotNull { document ->
                     document.toObject(Post::class.java)
                 }
-                onComplete(true, posts)
+                val loggedInUserId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
+                val postsWithLoggedInUser = posts.map { post -> post.copy(loggedInUserId = loggedInUserId) }
+                onComplete(true, postsWithLoggedInUser)
             }
             .addOnFailureListener { exception ->
                 Log.w("PostManager", "Error getting posts", exception)
@@ -57,7 +70,11 @@ class PostManager @Inject constructor(
             }
     }
 
-    fun updatePost(postId: String, updates: Map<String, Any>, onComplete: (isSuccess: Boolean) -> Unit) {
+    fun updatePost(
+        postId: String,
+        updates: Map<String, Any>,
+        onComplete: (isSuccess: Boolean) -> Unit
+    ) {
         fireStore.collection("posts").document(postId).update(updates)
             .addOnSuccessListener {
                 onComplete(true)
@@ -81,7 +98,11 @@ class PostManager @Inject constructor(
             }
     }
 
-    fun uploadImage(postId: String, imageData: ByteArray, onComplete: (isSuccess: Boolean, imageUrl: String?) -> Unit) {
+    fun uploadImage(
+        postId: String,
+        imageData: ByteArray,
+        onComplete: (isSuccess: Boolean, imageUrl: String?) -> Unit
+    ) {
         val storageRef = storage.getReference("post_images/$postId")
         val uploadTask = storageRef.putBytes(imageData)
 

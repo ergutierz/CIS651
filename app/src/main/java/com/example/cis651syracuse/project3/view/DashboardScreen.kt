@@ -1,6 +1,10 @@
 package com.example.cis651syracuse.project3.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,17 +39,26 @@ fun DashboardScreen() {
 
     LazyColumn {
         items(posts) { post ->
-            PostItem(post = post)
+            PostItem(
+                post = post,
+                onEditClick = viewModel::editPost,
+                onDeleteClick = viewModel::deletePost
+            )
         }
     }
 }
 
 @Composable
-fun PostItem(post: Post) {
+fun PostItem(post: Post, onEditClick: (Post) -> Unit, onDeleteClick: (Post) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable(
+                enabled = post.postBelongsToLoggedInUser,
+                onClick = {
+
+                }),
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -73,11 +87,40 @@ fun PostItem(post: Post) {
                         text = "Posted on: ${formatDate(post.timestamp)}",
                         style = MaterialTheme.typography.body2
                     )
+                    if (post.postBelongsToLoggedInUser) {
+                        Row {
+                            Box(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .border(BorderStroke(2.dp, Color.Blue))
+                                    .clickable { onEditClick(post) }
+                            ) {
+                                Text(
+                                    text = "Edit",
+                                    modifier = Modifier.padding(4.dp),
+                                    style = MaterialTheme.typography.button
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .border(BorderStroke(2.dp, Color.Blue))
+                                    .clickable { onDeleteClick(post) }
+                            ) {
+                                Text(
+                                    text = "Delete",
+                                    modifier = Modifier.padding(4.dp),
+                                    style = MaterialTheme.typography.button
+                                )
+                            }
+                        }
+                    }
+
                 }
             }
         }
     }
 }
+
 
 private fun formatDate(date: Date): String {
     val formatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())

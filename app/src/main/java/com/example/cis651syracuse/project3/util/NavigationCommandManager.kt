@@ -56,6 +56,13 @@ class NavigationCommandManager @Inject constructor(
                 get() = Screen.ForgotPasswordScreen.route
         }
 
+        val editPostDirection = object : NavigationCommand {
+            override val arguments: List<NamedNavArgument>
+                get() = emptyList()
+            override val destination: String
+                get() = Screen.PostEditScreen.route
+        }
+
         val dashboardDirection = object : NavigationCommand {
             override val arguments: List<NamedNavArgument>
                 get() = emptyList()
