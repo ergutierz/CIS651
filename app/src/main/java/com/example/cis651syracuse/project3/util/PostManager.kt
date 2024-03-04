@@ -25,6 +25,21 @@ class PostManager @Inject constructor(
             }
     }
 
+    fun getAllPosts(onComplete: (isSuccess: Boolean, posts: List<Post>?) -> Unit) {
+        fireStore.collection("posts").get()
+            .addOnSuccessListener { querySnapshot ->
+                val posts = querySnapshot.documents.mapNotNull { document ->
+                    document.toObject(Post::class.java)
+                }
+                onComplete(true, posts)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("PostManager", "Error getting posts", exception)
+                onComplete(false, null)
+            }
+    }
+
+
     fun getPost(postId: String, onComplete: (isSuccess: Boolean, post: Post?) -> Unit) {
         fireStore.collection("posts").document(postId).get()
             .addOnSuccessListener { document ->
