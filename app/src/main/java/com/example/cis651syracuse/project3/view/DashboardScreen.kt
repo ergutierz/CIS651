@@ -18,6 +18,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -45,6 +46,9 @@ fun DashboardScreen() {
                 onDeleteClick = viewModel::deletePost
             )
         }
+    }
+    LaunchedEffect("posts") {
+        viewModel.subscribeToUpdates()
     }
 }
 

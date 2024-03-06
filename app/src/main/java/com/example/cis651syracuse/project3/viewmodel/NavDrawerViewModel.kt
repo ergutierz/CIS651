@@ -33,10 +33,6 @@ class NavDrawerViewModel @Inject constructor(
             initialValue = ViewState()
         )
 
-    init {
-        fetchUserProfile()
-    }
-
     fun onAction(action: Action) {
         when (action) {
             is Action.Login -> performLogin()
@@ -103,6 +99,7 @@ class NavDrawerViewModel @Inject constructor(
     }
 
     private fun performLogin() {
+        fetchUserProfile()
         setLoadingState(true)
         val email = _modelStore.value.email
         val password = _modelStore.value.password

@@ -3,6 +3,8 @@ package com.example.cis651syracuse.project3.util
 import android.util.Log
 import com.example.cis651syracuse.project3.model.Post
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +21,30 @@ class PostManager @Inject constructor(
 
     private val _selectedPostForEditing = MutableStateFlow<Post?>(null)
     val selectedPostForEditing = _selectedPostForEditing.asStateFlow()
+
+    private val _postsFlow = MutableStateFlow<List<Post>>(emptyList())
+    val postsFlow = _postsFlow.asStateFlow()
+
+    private var registration: ListenerRegistration? = null
+
+    fun listenToPostsUpdates() {
+        val query: Query = fireStore.collection("posts")
+        registration = query.addSnapshotListener { snapshots, e ->
+            if (e != null) {
+                Log.w("PostManager", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            val posts = snapshots?.documents?.mapNotNull { it.toObject(Post::class.java) } ?: emptyList()
+            val loggedInUserId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
+            val postsWithLoggedInUser = posts.map { post -> post.copy(loggedInUserId = loggedInUserId) }
+            _postsFlow.value = postsWithLoggedInUser
+        }
+    }
+
+    fun clearPostsListener() {
+        registration?.remove()
+    }
 
     fun setSelectedPostForEditing(post: Post) {
         _selectedPostForEditing.update { post }
