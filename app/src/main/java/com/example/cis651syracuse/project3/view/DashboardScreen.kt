@@ -14,12 +14,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
@@ -40,8 +42,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.cis651syracuse.core.ErrorDialog
+import com.example.cis651syracuse.core.handleEvent
 import com.example.cis651syracuse.project3.model.Post
 import com.example.cis651syracuse.project3.viewmodel.DashboardViewModel
+import com.example.cis651syracuse.project3.viewmodel.ForgotPasswordViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -50,7 +55,7 @@ import java.util.Locale
 fun DashboardScreen() {
     val viewModel: DashboardViewModel = hiltViewModel()
     val posts by viewModel.posts.collectAsState()
-    val displayTryAgain by viewModel.displayTryAgain.collectAsState()
+    val events by viewModel.event.collectAsState()
 
     LazyColumn {
         items(posts) { post ->
@@ -62,10 +67,43 @@ fun DashboardScreen() {
             )
         }
     }
-    if (displayTryAgain.value is DashboardViewModel.Event.TryAgainLater) TryAgainLaterToast()
+    events.handleEvent { event ->
+        when (event) {
+            is DashboardViewModel.Event.TryAgainLater -> TryAgainLaterToast()
+            is DashboardViewModel.Event.DeleteConfirmation -> {
+                if (event.display) {
+                    DeleteConfirmationDialog(
+                        dismissDeleteDialog = { viewModel.dismissDeleteDialog() },
+                        confirmedDeletePost = { viewModel.confirmedDeletePost(event.post) }
+                    )
+                }
+            }
+        }
+    }
     LaunchedEffect("posts") {
         viewModel.subscribeToUpdates()
     }
+}
+
+@Composable
+private fun DeleteConfirmationDialog(dismissDeleteDialog: () -> Unit, confirmedDeletePost: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = dismissDeleteDialog,
+        title = { Text(text = "Confirm") },
+        text = { Text(text = "Please confirm post deletion.") },
+        confirmButton = {
+            TextButton(
+                onClick = confirmedDeletePost
+            ) {
+                Text("OK")
+            }
+            TextButton(
+                onClick = dismissDeleteDialog
+            ) {
+                Text("EXIT")
+            }
+        }
+    )
 }
 
 @Composable

@@ -18,8 +18,8 @@ class DashboardViewModel @Inject constructor(
     private val navigationCommandManager: NavigationCommandManager
 ) : ViewModel() {
 
-    private val _displayTryAgain = MutableStateFlow<ConsumableEvent<Event>>(ConsumableEvent())
-    val displayTryAgain: StateFlow<ConsumableEvent<Event>> = _displayTryAgain.asStateFlow()
+    private val _event = MutableStateFlow<ConsumableEvent<Event>>(ConsumableEvent())
+    val event: StateFlow<ConsumableEvent<Event>> = _event.asStateFlow()
     val posts: StateFlow<List<Post>> = postManager.postsFlow
 
     override fun onCleared() {
@@ -32,11 +32,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun deletePost(post: Post) {
-        postManager.deletePost(post.postId) { isSuccess ->
-            if (!isSuccess) {
-                _displayTryAgain.value = ConsumableEvent.create(Event.TryAgainLater)
-            }
-        }
+        _event.value = ConsumableEvent.create(Event.DeleteConfirmation(post, true))
     }
 
     fun editPost(post: Post) {
@@ -48,8 +44,21 @@ class DashboardViewModel @Inject constructor(
         postManager.likePost(isLiked, post)
     }
 
+    fun dismissDeleteDialog() {
+        _event.value = ConsumableEvent.create(Event.DeleteConfirmation(post = Post(), false))
+    }
+
+    fun confirmedDeletePost(post: Post) {
+        postManager.deletePost(post.postId) { isSuccess ->
+            if (!isSuccess) {
+                _event.value = ConsumableEvent.create(Event.TryAgainLater)
+            } else dismissDeleteDialog()
+        }
+    }
+
     sealed interface Event {
         data object TryAgainLater : Event
+        data class DeleteConfirmation(val post: Post, val display: Boolean) : Event
     }
 }
 
