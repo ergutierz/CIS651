@@ -9,7 +9,8 @@ data class Post(
     val description: String = "",
     val imageUrl: String? = null,
     val timestamp: Date = Date(),
-    val likeCount: Int = 0
+    val likeCount: Int = 0,
+    val handle: String? = null
 ) {
     val postBelongsToLoggedInUser: Boolean
         get() = userId == loggedInUserId

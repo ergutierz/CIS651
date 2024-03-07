@@ -42,7 +42,9 @@ class PostCreationViewModel @Inject constructor(
     private fun createPost(description: String?, imageUrl: String?) {
         setLoadingState(true)
         val userId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
+        val emailHandle = firebaseAuthenticationManager.getCurrentUser?.email?.substringBefore("@").orEmpty()
         val post = Post(
+            handle = emailHandle,
             userId = userId,
             postId = UUID.randomUUID().toString(),
             description = description.orEmpty(),

@@ -34,7 +34,6 @@ class PostManager @Inject constructor(
                 Log.w("PostManager", "Listen failed.", e)
                 return@addSnapshotListener
             }
-
             val posts = snapshots?.documents?.mapNotNull { it.toObject(Post::class.java) } ?: emptyList()
             val loggedInUserId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
             val postsWithLoggedInUser = posts.map { post -> post.copy(loggedInUserId = loggedInUserId) }
@@ -48,6 +47,19 @@ class PostManager @Inject constructor(
 
     fun setSelectedPostForEditing(post: Post) {
         _selectedPostForEditing.update { post }
+    }
+
+    fun likePost(isLiked: Boolean, post: Post) {
+        val newLikeCount = if (isLiked) post.likeCount + 1 else post.likeCount - 1
+        val postId = post.postId
+        fireStore.collection("posts").document(postId)
+            .update("likeCount", newLikeCount)
+            .addOnSuccessListener {
+                Log.d("PostManager", "Post like count updated successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.w("PostManager", "Error updating post like count", e)
+            }
     }
 
     fun createPost(post: Post, onComplete: (isSuccess: Boolean) -> Unit) {
@@ -69,7 +81,8 @@ class PostManager @Inject constructor(
                     document.toObject(Post::class.java)
                 }
                 val loggedInUserId = firebaseAuthenticationManager.getCurrentUser?.uid.orEmpty()
-                val postsWithLoggedInUser = posts.map { post -> post.copy(loggedInUserId = loggedInUserId) }
+                val postsWithLoggedInUser =
+                    posts.map { post -> post.copy(loggedInUserId = loggedInUserId) }
                 onComplete(true, postsWithLoggedInUser)
             }
             .addOnFailureListener { exception ->

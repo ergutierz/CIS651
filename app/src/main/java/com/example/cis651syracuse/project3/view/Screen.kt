@@ -20,7 +20,7 @@ sealed class Screen(val route: String) {
                 PostCreationScreen.route -> "Create Post"
                 PostEditScreen.route -> "Edit Post"
                 PostDetailScreen.route -> "Post Details"
-                else -> "Poster APP"
+                else -> "Social Application"
             }
         }
     }

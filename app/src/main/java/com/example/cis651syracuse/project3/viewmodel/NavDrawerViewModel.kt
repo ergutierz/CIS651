@@ -103,6 +103,7 @@ class NavDrawerViewModel @Inject constructor(
         setLoadingState(true)
         val email = _modelStore.value.email
         val password = _modelStore.value.password
+        authRepository.signOut()
         authRepository.login(email, password) { firebaseUser: FirebaseUser?, exception: Exception? ->
             setLoadingState(false)
             if (exception == null && firebaseUser != null) {
